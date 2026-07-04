@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_action'] ?? '') === '
     $id = (int)($_POST['id'] ?? 0);
     $num = preg_replace('/[^0-9]/', '', ipost('ivr_number'));
     $name = ipost('name');
-    $description = ipost('description');
+    $description = '';
     $promptFile = ipost('prompt_file');
     $promptText = ipost('prompt_tts_text');
     $promptType = (($_POST['prompt_announcement_type'] ?? 'tts') === 'mp3') ? 'mp3' : 'tts';
@@ -216,7 +216,6 @@ $edit = [
     'id'=>0,
     'ivr_number'=>'800',
     'name'=>'Hauptmenü',
-    'description'=>'',
     'prompt_file'=>'',
     'prompt_tts_text'=>'',
     'timeout_seconds'=>10,
@@ -318,7 +317,6 @@ document.addEventListener('DOMContentLoaded',spbxIvrInit);
 <div class="spbx-form-grid" style="margin-top:14px;">
 <div class="spbx-field"><label>Durchwahl</label><input class="spbx-input" name="ivr_number" value="<?php echo ih($edit['ivr_number']); ?>" required></div>
 <div class="spbx-field"><label>Name</label><input class="spbx-input" name="name" value="<?php echo ih($edit['name']); ?>" required></div>
-<div class="spbx-field" style="grid-column:1 / -1;"><label>Beschreibung</label><input class="spbx-input" name="description" value="<?php echo ih($edit['description']); ?>" placeholder="optional"></div>
 <div class="spbx-field"><label>Aktiv</label><label><input type="checkbox" name="active" <?php echo (int)$edit['active'] ? 'checked' : ''; ?>> Sprachmenü aktiv</label></div>
 </div>
 

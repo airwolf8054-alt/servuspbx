@@ -88,6 +88,12 @@ function spbx_ivr_context()
     return 'ivr';
 }
 
+function spbx_ivr_context_for_number($ivrNumber)
+{
+    $num = preg_replace('/[^0-9]/', '', (string)$ivrNumber);
+    return $num !== '' ? 'ivr_' . $num : spbx_ivr_context();
+}
+
 function spbx_ivr_digits()
 {
     return ['1','2','3','4','5','6','7','8','9','*','0','#'];
@@ -188,8 +194,8 @@ function spbx_ivr_target_appdata($type, $context, $exten, $currentIvrNumber = ''
     if ($type === 'extension' && $exten !== '') return ['Goto', 'internal,' . $exten . ',1'];
     if ($type === 'queue' && $exten !== '') return ['Goto', 'queue-services,' . $exten . ',1'];
     if ($type === 'ringgroup' && $exten !== '') return ['Goto', 'ringgroups,' . $exten . ',1'];
-    if ($type === 'ivr' && $exten !== '') return ['Goto', spbx_ivr_context() . ',' . $exten . ',1'];
-    if ($type === 'repeat' && $currentIvrNumber !== '') return ['Goto', spbx_ivr_context() . ',' . $currentIvrNumber . ',1'];
+    if ($type === 'ivr' && $exten !== '') return ['Goto', spbx_ivr_context_for_number($exten) . ',s,1'];
+    if ($type === 'repeat' && $currentIvrNumber !== '') return ['Goto', spbx_ivr_context_for_number($currentIvrNumber) . ',s,1'];
     if ($type === 'custom' && $context !== '' && $exten !== '') return ['Goto', $context . ',' . $exten . ',1'];
     if ($type === 'hangup') return ['Hangup', ''];
     return ['Hangup', ''];
@@ -199,19 +205,13 @@ function spbx_ivr_rebuild_dialplan()
 {
     spbx_ivr_install_schema();
     $db = spbx_db();
-    $ctx = spbx_ivr_context();
 
     if (function_exists('spbx_ast_config_writer_add') && spbx_ivr_table_exists('ast_config')) {
-        $stmt = $db->prepare("DELETE FROM ast_config WHERE filename='extensions.conf' AND category=?");
-        $stmt->bind_param('s', $ctx);
-        $stmt->execute();
-        spbx_ast_config_writer_add($ctx, 'switch', 'Realtime/@extensions', 4100, 0);
+        $db->query("DELETE FROM ast_config WHERE filename='extensions.conf' AND (category='ivr' OR category LIKE 'ivr\\_%')");
     }
 
-    $stmt = $db->prepare("DELETE FROM extensions WHERE context=?");
-    $stmt->bind_param('s', $ctx);
-    $stmt->execute();
-    $db->query("DELETE FROM extensions WHERE app='Goto' AND appdata LIKE 'ivr,%'");
+    $db->query("DELETE FROM extensions WHERE context='ivr' OR context LIKE 'ivr\\_%'");
+    $db->query("DELETE FROM extensions WHERE app='Goto' AND (appdata LIKE 'ivr,%' OR appdata LIKE 'ivr\\_%,%')");
 
     $insert = function($context, $exten, $priority, $app, $appdata = '') use ($db) {
         $priority = (string)$priority;
@@ -227,17 +227,23 @@ function spbx_ivr_rebuild_dialplan()
         $ivrId = (int)$ivr['id'];
         $num = trim((string)$ivr['ivr_number']);
         if (!preg_match('/^[0-9]{2,6}$/', $num)) continue;
+        $ctx = spbx_ivr_context_for_number($num);
         $name = (string)($ivr['name'] ?? 'Sprachmenü');
         $timeout = max(1, min(60, (int)($ivr['timeout_seconds'] ?? 10)));
         $prompt = trim((string)($ivr['prompt_file'] ?? ''));
-        $prio = 1;
-        $insert($ctx, $num, $prio++, 'NoOp', 'ServusPBX Sprachmenue ' . $name . ' (' . $num . ')');
-        $insert($ctx, $num, $prio++, 'Answer', '');
-        if ($prompt !== '') {
-            $insert($ctx, $num, $prio++, 'MP3Player', $prompt);
+
+        if (function_exists('spbx_ast_config_writer_add') && spbx_ivr_table_exists('ast_config')) {
+            spbx_ast_config_writer_add($ctx, 'switch', 'Realtime/@extensions', 4100 + $ivrId, 0);
         }
-        $insert($ctx, $num, $prio++, 'WaitExten', (string)$timeout);
-        $insert($ctx, $num, $prio++, 'Goto', $ctx . ',t,1');
+
+        $prio = 1;
+        $insert($ctx, 's', $prio++, 'NoOp', 'ServusPBX Sprachmenue ' . $name . ' (' . $num . ')');
+        $insert($ctx, 's', $prio++, 'Answer', '');
+        if ($prompt !== '') {
+            $insert($ctx, 's', $prio++, 'MP3Player', $prompt);
+        }
+        $insert($ctx, 's', $prio++, 'WaitExten', (string)$timeout);
+        $insert($ctx, 's', $prio++, 'Goto', $ctx . ',t,1');
 
         $options = spbx_ivr_options($ivrId);
         foreach ($options as $digit => $o) {
@@ -256,7 +262,7 @@ function spbx_ivr_rebuild_dialplan()
         $insert($ctx, 'i', 2, $iApp, $iData);
 
         foreach ($internalContexts as $intCtx) {
-            $insert($intCtx, $num, 1, 'Goto', $ctx . ',' . $num . ',1');
+            $insert($intCtx, $num, 1, 'Goto', $ctx . ',s,1');
         }
     }
 
