@@ -6,6 +6,7 @@ require_once __DIR__ . '/../inc/call_rules.php';
 require_once __DIR__ . '/../inc/queues.php';
 require_once __DIR__ . '/../inc/tts.php';
 require_once __DIR__ . '/../inc/ring_groups.php';
+require_once __DIR__ . '/../inc/ivr.php';
 
 spbx_require_admin();
 
@@ -13,6 +14,7 @@ $db = spbx_db();
 spbx_call_rules_install_schema();
 spbx_tts_install_schema();
 spbx_ring_groups_install_schema();
+spbx_ivr_install_schema();
 
 function cr_h($v) {
     return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
@@ -90,6 +92,9 @@ function cr_target_label($r) {
     }
     if ($type === 'queue') {
         return 'Queue → queue-services,' . $ext . ',1';
+    }
+    if ($type === 'ivr') {
+        return 'Sprachmenü → ivr,' . $ext . ',1';
     }
     if ($type === 'extension') {
         return 'Nebenstelle → ' . $ctx . ',' . $ext . ',1';
@@ -171,6 +176,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $openCtx = 'queue-services';
                 $openExten = $targetQueue;
             }
+        } elseif ($openType === 'ivr') {
+            $targetIvr = trim((string)($_POST['target_ivr'] ?? ''));
+            if ($targetIvr !== '') {
+                $openCtx = 'ivr';
+                $openExten = $targetIvr;
+            }
         } elseif ($openType !== 'custom') {
             $openType = 'custom';
         }
@@ -179,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($did === '') $did = 's';
         if ($closedAudio === '') $closedAudio = '/var/www/html/sounds/closed.mp3';
         if ($holidayAudio === '') $holidayAudio = '/var/www/html/sounds/holiday.mp3';
-        $allowedClosedDestinations = ['hangup','voicemail','extension','ringgroup','external','custom'];
+        $allowedClosedDestinations = ['hangup','voicemail','extension','ringgroup','queue','ivr','external','custom'];
         if (!in_array($closedDestinationType, $allowedClosedDestinations, true)) $closedDestinationType = 'hangup';
         if (!in_array($holidayDestinationType, $allowedClosedDestinations, true)) $holidayDestinationType = 'hangup';
         if ($openCtx === '') $errors[] = 'Ziel-Context fehlt.';
@@ -414,6 +425,17 @@ if ($queueResult) {
 }
 
 
+$callRuleIvrs = [];
+foreach (spbx_ivr_all(true) as $ivrRow) {
+    $ivrNumber = trim((string)($ivrRow['ivr_number'] ?? ''));
+    if ($ivrNumber === '') continue;
+    $callRuleIvrs[] = [
+        'number' => $ivrNumber,
+        'name' => (string)($ivrRow['name'] ?? ''),
+        'label' => trim($ivrNumber . ' - ' . (string)($ivrRow['name'] ?? '')),
+    ];
+}
+
 $didPatterns = [];
 $trunkNumbers = $db->query("SELECT DISTINCT main_number FROM spbx_trunks WHERE COALESCE(main_number,'')<>'' ORDER BY main_number");
 if ($trunkNumbers) {
@@ -464,6 +486,8 @@ $didPatterns[] = ['label' => 'Nur 4-stellige DW', 'value' => '_XXXX'];
                 extension: 'target_extension_box',
                 did_extension: 'target_did_extension_box',
                 ringgroup: 'target_ringgroup_box',
+                queue: 'target_queue_box',
+                ivr: 'target_ivr_box',
                 custom: 'target_custom_box'
             };
             Object.keys(ids).forEach(function(k) {
@@ -581,6 +605,7 @@ $didPatterns[] = ['label' => 'Nur 4-stellige DW', 'value' => '_XXXX'];
                                     <option value="did_extension" <?php echo $edit['open_destination_type']==='did_extension'?'selected':''; ?>>Durchwahl aus DID</option>
                                     <option value="ringgroup" <?php echo $edit['open_destination_type']==='ringgroup'?'selected':''; ?>>Rufgruppe</option>
                                     <option value="queue" <?php echo $edit['open_destination_type']==='queue'?'selected':''; ?>>Queue</option>
+                                    <option value="ivr" <?php echo $edit['open_destination_type']==='ivr'?'selected':''; ?>>Sprachmenü (IVR)</option>
                                     <option value="custom" <?php echo $edit['open_destination_type']==='custom'?'selected':''; ?>>Benutzerdefiniert</option>
                                 </select>
                             </div>
@@ -643,6 +668,21 @@ $didPatterns[] = ['label' => 'Nur 4-stellige DW', 'value' => '_XXXX'];
                                 <?php endif; ?>
                             </div>
 
+                            <div class="spbx-field" id="target_ivr_box">
+                                <label>Sprachmenü (IVR)</label>
+                                <select name="target_ivr" onchange="document.getElementById('open_destination_context').value='ivr';document.getElementById('open_destination_exten').value=this.value;">
+                                    <option value="">Bitte wählen</option>
+                                    <?php foreach ($callRuleIvrs as $ivrItem): ?>
+                                        <option value="<?php echo cr_h($ivrItem['number']); ?>" <?php echo ($edit['open_destination_type']==='ivr' && $edit['open_destination_exten']===$ivrItem['number']) ? 'selected' : ''; ?>>
+                                            <?php echo cr_h($ivrItem['label']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <?php if (!$callRuleIvrs): ?>
+                                    <div class="spbx-card-muted">Noch kein aktives Sprachmenü vorhanden.</div>
+                                <?php endif; ?>
+                            </div>
+
                             <div class="spbx-field" id="target_custom_box">
                                 <label>Benutzerdefiniertes Ziel</label>
                                 <input id="open_destination_context" name="open_destination_context" value="<?php echo cr_h($edit['open_destination_context']); ?>" placeholder="Context">
@@ -676,7 +716,7 @@ $didPatterns[] = ['label' => 'Nur 4-stellige DW', 'value' => '_XXXX'];
                             <div class="spbx-field">
                                 <label>Ziel bei geschlossen</label>
                                 <select name="closed_destination_type">
-                                    <?php foreach (['hangup'=>'Auflegen','voicemail'=>'Voicemail','extension'=>'Nebenstelle','ringgroup'=>'Rufgruppe','external'=>'Externe Nummer','custom'=>'Benutzerdefiniert'] as $v=>$l): ?>
+                                    <?php foreach (['hangup'=>'Auflegen','voicemail'=>'Voicemail','extension'=>'Nebenstelle','ringgroup'=>'Rufgruppe','queue'=>'Queue','ivr'=>'Sprachmenü (IVR)','external'=>'Externe Nummer','custom'=>'Benutzerdefiniert'] as $v=>$l): ?>
                                         <option value="<?php echo cr_h($v); ?>" <?php echo (($edit['closed_destination_type'] ?? $edit['closed_action'] ?? 'hangup')===$v)?'selected':''; ?>><?php echo cr_h($l); ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -714,7 +754,7 @@ $didPatterns[] = ['label' => 'Nur 4-stellige DW', 'value' => '_XXXX'];
                             <div class="spbx-field">
                                 <label>Ziel bei Feiertag</label>
                                 <select name="holiday_destination_type">
-                                    <?php foreach (['hangup'=>'Auflegen','voicemail'=>'Voicemail','extension'=>'Nebenstelle','ringgroup'=>'Rufgruppe','external'=>'Externe Nummer','custom'=>'Benutzerdefiniert'] as $v=>$l): ?>
+                                    <?php foreach (['hangup'=>'Auflegen','voicemail'=>'Voicemail','extension'=>'Nebenstelle','ringgroup'=>'Rufgruppe','queue'=>'Queue','ivr'=>'Sprachmenü (IVR)','external'=>'Externe Nummer','custom'=>'Benutzerdefiniert'] as $v=>$l): ?>
                                         <option value="<?php echo cr_h($v); ?>" <?php echo (($edit['holiday_destination_type'] ?? 'hangup')===$v)?'selected':''; ?>><?php echo cr_h($l); ?></option>
                                     <?php endforeach; ?>
                                 </select>

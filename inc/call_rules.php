@@ -181,6 +181,9 @@ function spbx_call_rules_target($rule)
     if ($type === 'queue') {
         return 'queue-services,' . $ext . ',1';
     }
+    if ($type === 'ivr') {
+        return 'ivr,' . $ext . ',1';
+    }
 
     return $ctx . ',' . $ext . ',1';
 }
@@ -203,6 +206,7 @@ function spbx_call_rules_build_destination($type, $ctx, $exten, $defaultCtx = ''
     }
     if ($type === 'ringgroup') return ['Goto', 'ringgroups,' . $exten . ',1'];
     if ($type === 'queue') return ['Goto', 'queue-services,' . $exten . ',1'];
+    if ($type === 'ivr') return ['Goto', 'ivr,' . $exten . ',1'];
     if ($type === 'extension') {
         if ($ctx === '' || $ctx === 'auto_internal') $ctx = $defaultCtx !== '' ? $defaultCtx : 'internal';
         return ['Goto', $ctx . ',' . $exten . ',1'];
