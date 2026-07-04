@@ -71,6 +71,7 @@ function spbx_sidebar()
         ['pages/trunk_a1.php', 'SIP-Trunks', 'phone-forwarded'],
         ['pages/ring_groups.php', 'Rufgruppen', 'users-round'],
         ['pages/queues.php', 'Queues', 'headphones'],
+        ['pages/ivr.php', 'Sprachmenü (IVR)', 'workflow'],
         ['pages/dect.php', 'DECT', 'radio'],
         ['pages/phonebook.php', 'Telefonbuch', 'book-user'],
         ['pages/holidays.php', 'Feiertage', 'calendar-days'],
