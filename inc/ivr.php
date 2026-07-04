@@ -191,7 +191,10 @@ function spbx_ivr_target_appdata($type, $context, $exten, $currentIvrNumber = ''
     $context = trim((string)$context);
     $exten = trim((string)$exten);
 
-    if ($type === 'extension' && $exten !== '') return ['Goto', 'internal,' . $exten . ',1'];
+    if ($type === 'extension' && $exten !== '') {
+        $internalCtxExpr = '${IF($["${SPBX_INTERNAL_CONTEXT}"=""]?internal:${SPBX_INTERNAL_CONTEXT})}';
+        return ['Goto', $internalCtxExpr . ',' . $exten . ',1'];
+    }
     if ($type === 'queue' && $exten !== '') return ['Goto', 'queue-services,' . $exten . ',1'];
     if ($type === 'ringgroup' && $exten !== '') return ['Goto', 'ringgroups,' . $exten . ',1'];
     if ($type === 'ivr' && $exten !== '') return ['Goto', spbx_ivr_context_for_number($exten) . ',s,1'];
@@ -262,7 +265,8 @@ function spbx_ivr_rebuild_dialplan()
         $insert($ctx, 'i', 2, $iApp, $iData);
 
         foreach ($internalContexts as $intCtx) {
-            $insert($intCtx, $num, 1, 'Goto', $ctx . ',s,1');
+            $insert($intCtx, $num, 1, 'Set', 'SPBX_INTERNAL_CONTEXT=' . $intCtx);
+            $insert($intCtx, $num, 2, 'Goto', $ctx . ',s,1');
         }
     }
 

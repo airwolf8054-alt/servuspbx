@@ -582,6 +582,8 @@ function spbx_call_rules_rebuild_dialplan()
 
             $hasWindow = false;
             $prio = 12;
+            $sourceInternalCtx = spbx_call_rules_internal_context_for_did($did);
+            $insert($ctx, $exten, $prio++, 'Set', 'SPBX_INTERNAL_CONTEXT=' . $sourceInternalCtx);
 
             if ($isDidExtension) {
                 // Separater, pattern-sicherer Zweig:
