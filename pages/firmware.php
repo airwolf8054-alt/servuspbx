@@ -1,0 +1,23 @@
+<?php
+require_once __DIR__ . '/../inc/auth.php';
+require_once __DIR__ . '/../inc/branding.php';
+spbx_require_admin(); $db=spbx_db();
+function fw_get($k,$d=''){global $db;$s=$db->prepare("SELECT setting_value FROM spbx_settings WHERE setting_key=? LIMIT 1");if(!$s)return $d;$s->bind_param('s',$k);$s->execute();$r=$s->get_result()->fetch_assoc();return $r?(string)$r['setting_value']:$d;}
+function fw_set($k,$v,$d=''){global $db;$s=$db->prepare("INSERT INTO spbx_settings (setting_key,setting_value,description) VALUES (?,?,?) ON DUPLICATE KEY UPDATE setting_value=VALUES(setting_value),description=VALUES(description)");$s->bind_param('sss',$k,$v,$d);$s->execute();}
+function su($m,$v){return 'https://downloads.snom.com/fw/'.rawurlencode($v).'/bin/'.rawurlencode($m.'-'.$v.'-SIP-r.swu');}
+function gu($m,$v){return 'https://downloads.grape.gigaset.net/fw/'.rawurlencode($v).'/bin/'.rawurlencode($m.'-'.$v.'-SIP-r.swu');}
+function mu($fw,$br){return 'https://dect.snom.com/M400/M400_v'.preg_replace('/[^0-9]/','',$fw).'_b'.preg_replace('/[^0-9]/','',$br).'.fwu';}
+$msg='';
+if($_SERVER['REQUEST_METHOD']==='POST'){foreach(['fw_snom_desktop_version','fw_gigaset_desktop_version','fw_gigaset_p82x_model','fw_gigaset_p85x_model','snom_m400_fw','snom_m400_branch','fw_gigaset_dect_n610_version','fw_gigaset_dect_n610_url'] as $k) fw_set($k,trim((string)($_POST[$k]??'')),'Firmware Einstellung'); $msg='Firmware-Einstellungen gespeichert.';}
+$snom=fw_get('fw_snom_desktop_version','10.1.226.13');$gig=fw_get('fw_gigaset_desktop_version','10.1.226.13');$p82=fw_get('fw_gigaset_p82x_model','P82x');$p85=fw_get('fw_gigaset_p85x_model','P85x');$mfw=fw_get('snom_m400_fw','0790');$mbr=fw_get('snom_m400_branch','0200');$nver=fw_get('fw_gigaset_dect_n610_version','');$nurl=fw_get('fw_gigaset_dect_n610_url','');
+?><!doctype html><html lang="de"><head><meta charset="utf-8"><title>Firmware - ServusPBX</title><link rel="icon" type="image/svg+xml" href="../assets/favicon.svg"><link rel="stylesheet" href="../css/servuspbx.css"></head><body><div class="spbx-app"><?php spbx_sidebar(); ?><main class="spbx-main"><?php spbx_page_header('Firmware','SNOM, Gigaset und DECT Firmware-Quellen'); ?><div class="spbx-content"><?php if($msg):?><div class="spbx-alert success"><?php echo spbx_h($msg);?></div><?php endif;?><form method="post" class="spbx-card" style="padding:18px;"><div class="spbx-form-grid">
+<div class="spbx-field"><label>SNOM Desktop Version</label><input class="spbx-input" name="fw_snom_desktop_version" value="<?php echo spbx_h($snom);?>"></div>
+<div class="spbx-field"><label>Gigaset Desktop Version</label><input class="spbx-input" name="fw_gigaset_desktop_version" value="<?php echo spbx_h($gig);?>"></div>
+<div class="spbx-field"><label>Gigaset P82x Firmware Modell</label><input class="spbx-input" name="fw_gigaset_p82x_model" value="<?php echo spbx_h($p82);?>"></div>
+<div class="spbx-field"><label>Gigaset P85x Firmware Modell</label><input class="spbx-input" name="fw_gigaset_p85x_model" value="<?php echo spbx_h($p85);?>"></div>
+<div class="spbx-field"><label>SNOM M400 FW</label><input class="spbx-input" name="snom_m400_fw" value="<?php echo spbx_h($mfw);?>"></div>
+<div class="spbx-field"><label>SNOM M400 Branch</label><input class="spbx-input" name="snom_m400_branch" value="<?php echo spbx_h($mbr);?>"></div>
+<div class="spbx-field"><label>Gigaset N610 Version</label><input class="spbx-input" name="fw_gigaset_dect_n610_version" value="<?php echo spbx_h($nver);?>"></div>
+<div class="spbx-field"><label>Gigaset N610 Firmware URL</label><input class="spbx-input" name="fw_gigaset_dect_n610_url" value="<?php echo spbx_h($nurl);?>"></div>
+</div><div style="margin-top:16px;"><button class="spbx-button primary" type="submit">Speichern</button></div></form>
+<div class="spbx-card" style="padding:18px;margin-top:18px;"><div class="spbx-card-title">Beispiele</div><table class="spbx-table"><tr><th>Gerät</th><th>URL</th></tr><tr><td>SNOM D810</td><td><?php echo spbx_h(su('snomD810',$snom));?></td></tr><tr><td>SNOM D812</td><td><?php echo spbx_h(su('snomD812',$snom));?></td></tr><tr><td>SNOM D815</td><td><?php echo spbx_h(su('snomD815',$snom));?></td></tr><tr><td>Gigaset P810</td><td><?php echo spbx_h(gu('gigasetP810',$gig));?></td></tr><tr><td>Gigaset P82x</td><td><?php echo spbx_h(gu($p82,$gig));?></td></tr><tr><td>Gigaset P85x</td><td><?php echo spbx_h(gu($p85,$gig));?></td></tr><tr><td>SNOM M400</td><td><?php echo spbx_h(mu($mfw,$mbr));?></td></tr></table></div></div></main></div></body></html>

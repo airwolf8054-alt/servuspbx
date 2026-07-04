@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IPPhoneMenu state="others_except_mb" dtmf="off" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/minibrowser.xsd" document_id="network">
+    <Title>$(lang:network_settings)</Title>
+    <Menu name="$(lang:vlan_settings)" id="vlan">
+      <MenuItem name="$(lang:vlan_id)">
+        <If condition="$(show_feature:FEATURE_PUI_STYLE_SIO)">
+          <SubText>$(set:vlan_id)</SubText>
+        </If>
+        <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+        <Action>vlan_id</Action>
+      </MenuItem>
+      <MenuItem name="$(lang:vlan_qos)">
+        <If condition="$(show_feature:FEATURE_PUI_STYLE_SIO)">
+          <SubText>$(set:vlan_qos)</SubText>
+        </If>
+        <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+        <Action>vlan_qos</Action>
+      </MenuItem>
+      <If Condition="$(bool_eval:$(condition:$(is_set:$(set:vlan_id))) | $(condition:$(is_set:$(set:vlan_qos))) | $(condition:$(vlan_lldp_settings_file_has_content)))">
+        <MenuItem name="$(lang:vlan_reset)">
+          <Url>phone://mp_nop#reset_vlan</Url>
+        </MenuItem>
+      </If>
+    </Menu>
+      <MenuItem name="$(lang:wlan_settings)">
+        <Url>file:///xml/wifi/wifi.xml#sub=*[@id="SIOwlan"]</Url>
+        <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+      </MenuItem>
+  <If condition="$(phone_state)!=Settings">
+    <SoftKeyItem>
+      <Name>CANCEL</Name>
+      <Url track="no">phone://mb_nop#go_back</Url>
+    </SoftKeyItem>
+</IPPhoneMenu>

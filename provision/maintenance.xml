@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IPPhoneBatch xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/minibrowser.xsd">
+<IPPhoneMenu state="others_except_mb" dtmf="off">
+<MenuItem name="$(lang:all_accounts)">
+      <Url track="no">file:///xml/gui/identity.xml#reregister=-1&amp;go_back</Url>
+      <ExtraIconType>$(icon_type_enum:kIconTypeMenuReload)</ExtraIconType>
+    </MenuItem>
+ <MenuItem name="$(lang:continuous_text_reboot)">
+    <ExtraIconType>$(icon_type_enum:kIconTypeMenuReboot)</ExtraIconType>
+    <Action>reboot</Action>
+  </MenuItem>
+</IPPhoneMenu>
+<IPPhoneText track="no" id="sync_settings">
+  <Title>$(lang:sync_settings)</Title>
+  <Text>$(lang:confirm_sync_settings)</Text>
+  <If condition="$(show_feature:ORDER_CANCEL_LEFT_OK_RIGHT)">
+    <SoftKeyItem>
+     <Name>F1</Name>
+      <Label>F_CANCEL</Label>
+      <Url>phone://mb_nop#go_back</Url>
+    </SoftKeyItem>
+    <SoftKeyItem>
+      <Name>F4</Name>
+      <Label>F_OK</Label>
+      <Url>phone://mb_exit#reloadset</Url>
+    </SoftKeyItem>
+    <SoftKeyItem>
+      <Name>ENTER</Name>
+      <Url>phone://mb_exit#reloadset</Url>
+    </SoftKeyItem>
+  </If>
+  <Else>
+    <SoftKeyItem>
+      <Name>F1</Name>
+      <Label>F_OK</Label>
+      <Url>phone://mb_exit#reloadset</Url>
+    </SoftKeyItem>
+    <SoftKeyItem>
+      <Name>F4</Name>
+      <Label>F_CANCEL</Label>
+      <Url>phone://mb_nop#go_back</Url>
+    </SoftKeyItem>
+    <SoftKeyItem>
+      <Name>ENTER</Name>
+      <Url>phone://mb_exit#reloadset</Url>
+    </SoftKeyItem>
+  </Else>
+</IPPhoneText>
+</IPPhoneBatch>

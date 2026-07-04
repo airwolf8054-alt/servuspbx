@@ -1,0 +1,306 @@
+/* ServusPBX Medical 1.0.1 */
+
+:root {
+    --spbx-navy: #071b3a;
+    --spbx-navy-2: #0f2d59;
+    --spbx-blue: #1677ff;
+    --spbx-green: #35c9a3;
+    --spbx-bg: #f4f7fb;
+    --spbx-card: #ffffff;
+    --spbx-border: #d7e2ee;
+    --spbx-text: #0f172a;
+    --spbx-muted: #64748b;
+    --spbx-danger: #b91c1c;
+    --spbx-success: #15803d;
+    --spbx-radius: 16px;
+    --spbx-shadow: 0 12px 28px rgba(15, 31, 58, .08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--spbx-bg);
+    color: var(--spbx-text);
+}
+
+a {
+    color: inherit;
+}
+
+.spbx-login-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at top left, rgba(53,201,163,.18), transparent 32%),
+        linear-gradient(135deg, #06152f, #0c2f62);
+    padding: 24px;
+}
+
+.spbx-login-card {
+    width: 100%;
+    max-width: 430px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.28);
+    padding: 34px;
+}
+
+.spbx-login-logo {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.spbx-login-logo img {
+    max-width: 310px;
+    width: 100%;
+    height: auto;
+}
+
+.spbx-login-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--spbx-navy);
+    margin: 0 0 6px;
+    text-align: center;
+}
+
+.spbx-login-subtitle {
+    color: var(--spbx-muted);
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.spbx-field {
+    margin-bottom: 16px;
+}
+
+.spbx-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.spbx-input,
+.spbx-select,
+.spbx-textarea,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--spbx-text);
+    font: inherit;
+    outline: none;
+}
+
+.spbx-input:focus,
+.spbx-select:focus,
+.spbx-textarea:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--spbx-blue);
+    box-shadow: 0 0 0 3px rgba(22, 119, 255, .13);
+}
+
+.spbx-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 12px;
+    padding: 11px 18px;
+    min-height: 44px;
+    font-weight: 900;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform .08s ease, box-shadow .08s ease, opacity .08s ease;
+}
+
+.spbx-button:hover {
+    transform: translateY(-1px);
+}
+
+.spbx-button.primary {
+    background: var(--spbx-blue);
+    color: #fff;
+    box-shadow: 0 10px 22px rgba(22,119,255,.22);
+}
+
+.spbx-button.secondary {
+    background: #fff;
+    color: var(--spbx-navy);
+    border: 1px solid var(--spbx-border);
+}
+
+.spbx-button.full {
+    width: 100%;
+}
+
+.spbx-alert {
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.spbx-alert.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.spbx-alert.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.spbx-app {
+    min-height: 100vh;
+    display: flex;
+}
+
+.spbx-sidebar {
+    width: 250px;
+    background: var(--spbx-navy);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0 auto 0 0;
+}
+
+.spbx-sidebar-logo {
+    padding: 22px 18px;
+    border-bottom: 1px solid rgba(255,255,255,.09);
+    text-align: center;
+}
+
+.spbx-sidebar-logo img {
+    width: 190px;
+    max-width: 100%;
+}
+
+.spbx-nav {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.spbx-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: rgba(255,255,255,.82);
+    font-weight: 850;
+}
+
+.spbx-nav a:hover,
+.spbx-nav a.active {
+    background: rgba(53,201,163,.16);
+    color: #fff;
+}
+
+.spbx-main {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-height: 100vh;
+}
+
+.spbx-topbar {
+    height: 76px;
+    background: #fff;
+    border-bottom: 1px solid var(--spbx-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+.spbx-page-title {
+    font-size: 24px;
+    font-weight: 950;
+    color: var(--spbx-navy);
+}
+
+.spbx-page-subtitle {
+    font-size: 13px;
+    color: var(--spbx-muted);
+    font-weight: 700;
+    margin-top: 3px;
+}
+
+.spbx-content {
+    padding: 24px;
+}
+
+.spbx-card {
+    background: var(--spbx-card);
+    border: 1px solid var(--spbx-border);
+    border-radius: var(--spbx-radius);
+    box-shadow: var(--spbx-shadow);
+    padding: 20px;
+}
+
+.spbx-card-title {
+    font-size: 18px;
+    color: var(--spbx-navy);
+    font-weight: 950;
+    margin-bottom: 6px;
+}
+
+.spbx-card-muted {
+    color: var(--spbx-muted);
+    font-weight: 700;
+}
+
+.spbx-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+@media (max-width: 980px) {
+    .spbx-sidebar {
+        position: static;
+        width: 100%;
+    }
+
+    .spbx-app {
+        display: block;
+    }
+
+    .spbx-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .spbx-grid {
+        grid-template-columns: 1fr;
+    }
+}

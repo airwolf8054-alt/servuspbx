@@ -1,0 +1,21 @@
+#!/bin/sh
+set -eu
+
+ENDPOINT="${1:-}"
+
+case "$ENDPOINT" in
+  ""|*[!A-Za-z0-9_.:-]*)
+    echo "Invalid endpoint id" >&2
+    exit 2
+    ;;
+esac
+
+if [ -x /usr/sbin/asterisk ]; then
+  exec /usr/sbin/asterisk -rx "pjsip send notify snom-check-cfg endpoint ${ENDPOINT}"
+fi
+
+if [ -x /usr/bin/asterisk ]; then
+  exec /usr/bin/asterisk -rx "pjsip send notify snom-check-cfg endpoint ${ENDPOINT}"
+fi
+
+exec asterisk -rx "pjsip send notify snom-check-cfg endpoint ${ENDPOINT}"

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IPPhoneMenu state="others_except_mb" dtmf="off" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/minibrowser.xsd">
+  <Title>$(lang:information_settings)</Title>
+  <MenuItem name="$(lang:status_messages)">
+    <Action>show_status_messages</Action>
+    <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+  </MenuItem>
+  <MenuItem name="$(lang:system_information_menu)">
+    <Action>sysinfo</Action>
+    <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+  </MenuItem>
+  <If condition="$(phone_state)!=Settings">
+    <SoftKeyItem>
+      <Name>CANCEL</Name>
+      <Url track="no">phone://mb_nop#go_back</Url>
+    </SoftKeyItem>
+  </If>
+</IPPhoneMenu>

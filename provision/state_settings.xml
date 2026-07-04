@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<IPPhoneMenu icon_xoffset="$(math_eval:$(gui_display_xsize)/20-5)" text_xoffset="$(math_eval:$(gui_display_xsize)/20-7)" state="others_except_mb" dtmf="off" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../schemas/minibrowser.xsd">
+  <Menu name="$(lang:language)" sort="yes" viewportcontrol="ShowSelectedLineAtBottom" speedselect="off">
+    <Repeat values="$(language_list)" token="|__LANG__|">
+      <MenuItem name=" __LANG__" sel="$(condition:__IDX__==$(selected_language_index_number))" id="lang__IDX__" sort_key="__LANG__">
+        <If condition="__IDX__==$(selected_language_index_number)">
+          <ExtraIconType>$(icon_type_enum:kIconTypeMenuRadioOn)</ExtraIconType>
+        </If>
+        <Else>
+          <ExtraIconType>$(icon_type_enum:kIconTypeMenuRadioOff)</ExtraIconType>
+        </Else>
+        <Url>phone://mb_nop#go_back&amp;set:language=__LANG__</Url>
+        <SoftKeyItem>
+          <Name>F1</Name>
+          <SoftKey>F_JUMP</SoftKey>
+        </SoftKeyItem>
+        <SoftKeyItem>
+          <Name>F4</Name>
+          <SoftKey>F_JUMP_BACK</SoftKey>
+        </SoftKeyItem>
+      </MenuItem>
+    </Repeat>
+    <If condition="$(show_feature:FEATURE_PUI_STYLE_SIO)">
+    </If>
+  </Menu>
+ <Menu name="$(lang:audio_settings)" id="audiosettings">
+    <If condition="$(show_feature:FEATURE_HEADSET_DETECT)">
+      <MenuItem name="$(lang:headset_detection)">
+        <If condition="$(bool_eval:$(set:headset_available_detect))">
+          <ExtraIconType>$(icon_type_enum:kIconTypeMenuSliderOn)</ExtraIconType>
+        </If>
+        <Else>
+          <ExtraIconType>$(icon_type_enum:kIconTypeMenuSliderOff)</ExtraIconType>
+        </Else>
+        <SubText>$(on_off:$(set:headset_available_detect))</SubText>
+        <Url>phone://mb_nop#toggleset:headset_available_detect</Url>
+      </MenuItem>
+    </If>
+   <MenuItem name="$(lang:menu_gen_ringtone)">
+      <Action>ringtone</Action>
+      <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+    </MenuItem>
+    <If condition="$(bool_eval:$(condition:$(var_ifc:BluetoothManager::ready)) | $(condition:$(var_ifc:BluetoothManager::has_usb_bt_stick)))">
+      <MenuItem name="$(lang:bluetooth)">
+        <Url>file:///xml/gui/bluetooth.xml</Url>
+        <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+      </MenuItem>
+    </If>
+    <If condition="$(bool_eval:$(condition:$(var_ifc:UsbBluetoothManager::is_dongle_ready)))">
+    <MenuItem name="$(lang:bluetooth)">
+      <Url>file:///xml/gui/usb_bluetooth.xml#sub=*[@id="usb_bt_menu"]&amp;action_ifc:UsbBluetoothManager=InView&amp;var:animationcounter=0</Url>
+      <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+    </MenuItem>
+    </If>
+    <Menu name="$(lang:menu_volume)" id="volumesettings">
+      <MenuItem name="$(lang:vol_ringer_text)">
+        <Action>vol_ringer</Action>
+        <If condition="$(show_feature:FEATURE_PUI_STYLE_SIO)">
+          <SubText>$(set:vol_ringer)</SubText>
+        </If>
+        <ExtraIconType>$(icon_type_enum:kIconTypeMenuRinger)</ExtraIconType>
+      </MenuItem>
+      <MenuItem name="$(lang:vol_speaker_text)">
+        <Action>vol_speaker</Action>
+        <If condition="$(show_feature:FEATURE_PUI_STYLE_SIO)">
+          <SubText>$(set:vol_speaker)</SubText>
+        </If>
+        <ExtraIconType>$(icon_type_enum:kIconTypeMenuSpeaker)</ExtraIconType>
+      </MenuItem>
+      <MenuItem name="$(lang:vol_handset_text)">
+        <Action>vol_handset</Action>
+        <If condition="$(show_feature:FEATURE_PUI_STYLE_SIO)">
+          <SubText>$(set:vol_handset)</SubText>
+        </If>
+        <ExtraIconType>$(icon_type_enum:kIconTypeMenuHandset)</ExtraIconType>
+      </MenuItem>
+    </Menu>
+  </Menu>
+  <MenuItem name="$(lang:network_settings)" id="network">
+    <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+        <Url>file://xml/gui/network.xml#action_ifc:pui=get_wifi_status</Url>
+  </MenuItem>
+  <MenuItem name="$(lang:system_information_menu)" >
+    <Action>sysinfo</Action>
+    <ExtraIconType>$(icon_type_enum:kIconTypeMenuArrowRight)</ExtraIconType>
+  </MenuItem>
+  <Title>$(lang:maintenance_settings)</Title>
+<MenuItem name="$(lang:all_accounts)">
+      <Url track="no">file:///xml/gui/identity.xml#reregister=-1&amp;go_back</Url>
+      <ExtraIconType>$(icon_type_enum:kIconTypeMenuReload)</ExtraIconType>
+    </MenuItem>
+  <MenuItem name="$(lang:sync_settings)" id="maintenance">
+    <ExtraIconType>$(icon_type_enum:kIconTypeMenuRefresh)</ExtraIconType>
+    <Url>file:///xml/gui/maintenance.xml#sub=*[@id="sync_settings"]</Url>
+  </MenuItem>
+ <MenuItem name="$(lang:continuous_text_reboot)">
+    <ExtraIconType>$(icon_type_enum:kIconTypeMenuReboot)</ExtraIconType>
+    <Action>reboot</Action>
+  </MenuItem>
+</IPPhoneMenu>

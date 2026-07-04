@@ -1,0 +1,3757 @@
+/* ServusPBX Medical 1.0.1 */
+
+:root {
+    --spbx-navy: #071b3a;
+    --spbx-navy-2: #0f2d59;
+    --spbx-blue: #1677ff;
+    --spbx-green: #35c9a3;
+    --spbx-bg: #f4f7fb;
+    --spbx-card: #ffffff;
+    --spbx-border: #d7e2ee;
+    --spbx-text: #0f172a;
+    --spbx-muted: #64748b;
+    --spbx-danger: #b91c1c;
+    --spbx-success: #15803d;
+    --spbx-radius: 16px;
+    --spbx-shadow: 0 12px 28px rgba(15, 31, 58, .08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--spbx-bg);
+    color: var(--spbx-text);
+}
+
+a {
+    color: inherit;
+}
+
+.spbx-login-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at top left, rgba(53,201,163,.18), transparent 32%),
+        linear-gradient(135deg, #06152f, #0c2f62);
+    padding: 24px;
+}
+
+.spbx-login-card {
+    width: 100%;
+    max-width: 430px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.28);
+    padding: 34px;
+}
+
+.spbx-login-logo {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.spbx-login-logo img {
+    max-width: 310px;
+    width: 100%;
+    height: auto;
+}
+
+.spbx-login-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--spbx-navy);
+    margin: 0 0 6px;
+    text-align: center;
+}
+
+.spbx-login-subtitle {
+    color: var(--spbx-muted);
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.spbx-field {
+    margin-bottom: 16px;
+}
+
+.spbx-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.spbx-input,
+.spbx-select,
+.spbx-textarea,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--spbx-text);
+    font: inherit;
+    outline: none;
+}
+
+.spbx-input:focus,
+.spbx-select:focus,
+.spbx-textarea:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--spbx-blue);
+    box-shadow: 0 0 0 3px rgba(22, 119, 255, .13);
+}
+
+.spbx-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 12px;
+    padding: 11px 18px;
+    min-height: 44px;
+    font-weight: 900;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform .08s ease, box-shadow .08s ease, opacity .08s ease;
+}
+
+.spbx-button:hover {
+    transform: translateY(-1px);
+}
+
+.spbx-button.primary {
+    background: var(--spbx-blue);
+    color: #fff;
+    box-shadow: 0 10px 22px rgba(22,119,255,.22);
+}
+
+.spbx-button.secondary {
+    background: #fff;
+    color: var(--spbx-navy);
+    border: 1px solid var(--spbx-border);
+}
+
+.spbx-button.full {
+    width: 100%;
+}
+
+.spbx-alert {
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.spbx-alert.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.spbx-alert.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.spbx-app {
+    min-height: 100vh;
+    display: flex;
+}
+
+.spbx-sidebar {
+    width: 250px;
+    background: var(--spbx-navy);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0 auto 0 0;
+}
+
+.spbx-sidebar-logo {
+    padding: 22px 18px;
+    border-bottom: 1px solid rgba(255,255,255,.09);
+    text-align: center;
+}
+
+.spbx-sidebar-logo img {
+    width: 190px;
+    max-width: 100%;
+}
+
+.spbx-nav {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.spbx-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: rgba(255,255,255,.82);
+    font-weight: 850;
+}
+
+.spbx-nav a:hover,
+.spbx-nav a.active {
+    background: rgba(53,201,163,.16);
+    color: #fff;
+}
+
+.spbx-main {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-height: 100vh;
+}
+
+.spbx-topbar {
+    height: 76px;
+    background: #fff;
+    border-bottom: 1px solid var(--spbx-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+.spbx-page-title {
+    font-size: 24px;
+    font-weight: 950;
+    color: var(--spbx-navy);
+}
+
+.spbx-page-subtitle {
+    font-size: 13px;
+    color: var(--spbx-muted);
+    font-weight: 700;
+    margin-top: 3px;
+}
+
+.spbx-content {
+    padding: 24px;
+}
+
+.spbx-card {
+    background: var(--spbx-card);
+    border: 1px solid var(--spbx-border);
+    border-radius: var(--spbx-radius);
+    box-shadow: var(--spbx-shadow);
+    padding: 20px;
+}
+
+.spbx-card-title {
+    font-size: 18px;
+    color: var(--spbx-navy);
+    font-weight: 950;
+    margin-bottom: 6px;
+}
+
+.spbx-card-muted {
+    color: var(--spbx-muted);
+    font-weight: 700;
+}
+
+.spbx-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+@media (max-width: 980px) {
+    .spbx-sidebar {
+        position: static;
+        width: 100%;
+    }
+
+    .spbx-app {
+        display: block;
+    }
+
+    .spbx-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .spbx-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.3 - iPad / Touch Navigation */
+
+.spbx-nav a {
+    min-height: 48px;
+    font-size: 15px;
+}
+
+.spbx-nav-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,.08);
+    font-size: 16px;
+    flex: 0 0 28px;
+}
+
+.spbx-nav a.active .spbx-nav-icon,
+.spbx-nav a:hover .spbx-nav-icon {
+    background: rgba(53,201,163,.28);
+}
+
+.spbx-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(170px, 1fr));
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.spbx-stat-card {
+    background: #fff;
+    border: 1px solid var(--spbx-border);
+    border-radius: 18px;
+    box-shadow: var(--spbx-shadow);
+    padding: 20px;
+    min-height: 132px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.spbx-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #eef6ff;
+    color: var(--spbx-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.spbx-stat-value {
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 950;
+    color: var(--spbx-navy);
+    margin-top: 16px;
+}
+
+.spbx-stat-label {
+    color: var(--spbx-muted);
+    font-size: 13px;
+    font-weight: 850;
+    margin-top: 6px;
+}
+
+.spbx-action-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.spbx-action-card {
+    min-height: 140px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform .1s ease, box-shadow .1s ease;
+}
+
+.spbx-action-card:hover {
+    transform: translateY(-2px);
+}
+
+.spbx-tablet-hint {
+    margin-top: 18px;
+    color: var(--spbx-muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+@media (max-width: 1180px) {
+    .spbx-dashboard-grid {
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+    }
+
+    .spbx-action-grid {
+        grid-template-columns: repeat(2, minmax(240px, 1fr));
+    }
+
+    .spbx-sidebar {
+        width: 228px;
+    }
+
+    .spbx-main {
+        margin-left: 228px;
+        width: calc(100% - 228px);
+    }
+}
+
+/* iPad Portrait / Tablet */
+@media (max-width: 900px) {
+    .spbx-app {
+        display: block;
+    }
+
+    .spbx-sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .spbx-sidebar-logo {
+        padding: 14px 16px;
+    }
+
+    .spbx-sidebar-logo img {
+        width: 220px;
+    }
+
+    .spbx-nav {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(120px, 1fr));
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .spbx-nav a {
+        min-height: 58px;
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+        gap: 6px;
+        padding: 9px 8px;
+        font-size: 13px;
+    }
+
+    .spbx-nav-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .spbx-main {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .spbx-topbar {
+        height: auto;
+        min-height: 70px;
+        padding: 16px;
+    }
+
+    .spbx-content {
+        padding: 16px;
+    }
+
+    .spbx-dashboard-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .spbx-action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .spbx-stat-card,
+    .spbx-card {
+        border-radius: 16px;
+    }
+
+    .spbx-button {
+        min-height: 48px;
+    }
+}
+
+/* Phone fallback */
+@media (max-width: 620px) {
+    .spbx-nav {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+    }
+
+    .spbx-dashboard-grid,
+    .spbx-action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.4 - Phonebook */
+
+.spbx-toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.spbx-toolbar-left,
+.spbx-toolbar-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.spbx-search {
+    min-width: 280px;
+}
+
+.spbx-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--spbx-border);
+    border-radius: 16px;
+    background: #fff;
+}
+
+.spbx-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 760px;
+}
+
+.spbx-table th,
+.spbx-table td {
+    padding: 13px 14px;
+    border-bottom: 1px solid #e5edf5;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.spbx-table th {
+    background: #f8fafc;
+    color: #334155;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-weight: 950;
+}
+
+.spbx-table td {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.spbx-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.spbx-table-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.spbx-button.small {
+    min-height: 38px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.spbx-button.danger {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.spbx-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.spbx-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    justify-content: flex-end;
+}
+
+.spbx-import-box {
+    border: 1px dashed #9db5d2;
+    background: #f8fbff;
+    border-radius: 16px;
+    padding: 18px;
+    margin-top: 16px;
+}
+
+.spbx-muted-small {
+    color: var(--spbx-muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+@media (max-width: 900px) {
+    .spbx-search {
+        min-width: 100%;
+    }
+
+    .spbx-toolbar-left,
+    .spbx-toolbar-right {
+        width: 100%;
+    }
+
+    .spbx-toolbar-right .spbx-button,
+    .spbx-toolbar-left .spbx-button {
+        flex: 1 1 auto;
+    }
+
+    .spbx-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .spbx-table-actions {
+        justify-content: flex-start;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.5 - Phonebook UI Fix */
+
+.spbx-phonebook-layout {
+    display: grid;
+    gap: 18px;
+}
+
+.spbx-card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.spbx-card-header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.spbx-phonebook-search {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) auto auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.spbx-empty-state {
+    border: 1px dashed #b9c9dc;
+    background: #f8fbff;
+    border-radius: 16px;
+    padding: 26px;
+    text-align: center;
+    color: var(--spbx-muted);
+    font-weight: 800;
+}
+
+.spbx-empty-state strong {
+    display: block;
+    color: var(--spbx-navy);
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.spbx-phonebook-table .spbx-table {
+    min-width: 900px;
+}
+
+.spbx-phonebook-table td:first-child,
+.spbx-phonebook-table th:first-child {
+    padding-left: 18px;
+}
+
+.spbx-phonebook-table td:last-child,
+.spbx-phonebook-table th:last-child {
+    padding-right: 18px;
+}
+
+.spbx-import-card {
+    margin-top: 0;
+}
+
+.spbx-import-form {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    margin-top: 14px;
+}
+
+.spbx-file-input {
+    min-height: 44px;
+    padding: 9px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    background: #fff;
+    font: inherit;
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .spbx-phonebook-search {
+        grid-template-columns: 1fr;
+    }
+
+    .spbx-card-header-row {
+        display: grid;
+    }
+
+    .spbx-card-header-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .spbx-card-header-actions .spbx-button {
+        width: 100%;
+    }
+
+    .spbx-import-form {
+        grid-template-columns: 1fr;
+    }
+
+    .spbx-import-form .spbx-button {
+        width: 100%;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.6 - Search Input Style Fix */
+
+.spbx-phonebook-search input,
+.spbx-phonebook-search input[type="text"],
+input.spbx-search-input {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--spbx-text);
+    font: inherit;
+    font-weight: 700;
+    outline: none;
+    box-sizing: border-box;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.spbx-phonebook-search input:focus,
+input.spbx-search-input:focus {
+    border-color: var(--spbx-blue);
+    box-shadow: 0 0 0 3px rgba(22, 119, 255, .13);
+}
+
+.spbx-phonebook-search input::placeholder,
+input.spbx-search-input::placeholder {
+    color: #94a3b8;
+    font-weight: 700;
+}
+
+
+/* ServusPBX Medical 1.0.7 - Phonebook Form Style Fix */
+
+.spbx-card form .spbx-form-grid {
+    margin-top: 18px;
+}
+
+.spbx-form-grid .spbx-field {
+    margin-bottom: 0;
+}
+
+.spbx-form-grid input,
+.spbx-form-grid input[type="text"],
+.spbx-form-grid input[type="email"],
+.spbx-form-grid input[type="tel"],
+input.spbx-form-input {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    background: #ffffff;
+    color: var(--spbx-text);
+    font: inherit;
+    font-weight: 700;
+    outline: none;
+    box-sizing: border-box;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.spbx-form-grid input:focus,
+input.spbx-form-input:focus {
+    border-color: var(--spbx-blue);
+    box-shadow: 0 0 0 3px rgba(22, 119, 255, .13);
+}
+
+.spbx-phonebook-form-card {
+    max-width: 1120px;
+}
+
+.spbx-phonebook-form-card .spbx-form-grid {
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+}
+
+@media (max-width: 900px) {
+    .spbx-phonebook-form-card {
+        max-width: none;
+    }
+
+    .spbx-phonebook-form-card .spbx-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .spbx-form-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .spbx-form-actions .spbx-button {
+        width: 100%;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.8 - Phonebook Form Hard CSS Fix */
+
+.spbx-phonebook-form-card .spbx-form-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(320px, 1fr)) !important;
+    column-gap: 24px !important;
+    row-gap: 18px !important;
+    align-items: end !important;
+}
+
+.spbx-phonebook-form-card .spbx-field {
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+.spbx-phonebook-form-card .spbx-field input,
+.spbx-phonebook-form-card input,
+.spbx-phonebook-form-card input[type="text"],
+.spbx-phonebook-form-card input[type="tel"],
+.spbx-phonebook-form-card input[type="email"] {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.spbx-phonebook-form-card .spbx-field input:focus,
+.spbx-phonebook-form-card input:focus {
+    border-color: var(--spbx-blue) !important;
+    box-shadow: 0 0 0 3px rgba(22,119,255,.13) !important;
+}
+
+.spbx-phonebook-form-card .spbx-form-actions {
+    margin-top: 26px !important;
+    display: flex !important;
+    gap: 12px !important;
+    justify-content: flex-end !important;
+}
+
+@media (max-width: 900px) {
+    .spbx-phonebook-form-card .spbx-form-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .spbx-phonebook-form-card .spbx-form-actions {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.9 - Phonebook CSS Scope Fix */
+
+/* CSV Import darf NICHT vom Kontaktformular-Hard-CSS beeinflusst werden */
+.spbx-import-card input[type="file"],
+.spbx-import-form input[type="file"],
+input.spbx-file-input {
+    display: block !important;
+    width: 100% !important;
+    min-height: 46px !important;
+    padding: 9px 12px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+    outline: none !important;
+    box-shadow: none !important;
+    appearance: auto !important;
+    -webkit-appearance: auto !important;
+}
+
+/* Suchfeld bleibt eigenes Element */
+.spbx-phonebook-search input.spbx-search-input {
+    display: block !important;
+    width: 100% !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+}
+
+/* Nur echte Kontaktformularfelder */
+.spbx-contact-form .spbx-field input {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.spbx-contact-form .spbx-field input:focus {
+    border-color: var(--spbx-blue) !important;
+    box-shadow: 0 0 0 3px rgba(22,119,255,.13) !important;
+}
+
+
+/* ServusPBX Medical 1.0.11 - 2FA */
+.spbx-button.danger {
+    background: #dc2626;
+    color: #fff;
+    border: 1px solid #dc2626;
+}
+.spbx-button.danger:hover {
+    box-shadow: 0 10px 22px rgba(220,38,38,.22);
+}
+
+
+/* ServusPBX Medical 1.0.12 - Mail 2FA */
+.spbx-inline-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 900;
+}
+.spbx-inline-check input {
+    width: auto !important;
+    min-height: auto !important;
+}
+
+
+/* ServusPBX Medical 1.0.14 - 2FA Checkbox UI Fix */
+
+.spbx-2fa-form .spbx-field input[type="email"] {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+}
+
+.spbx-toggle-row {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    background: #f8fbff;
+    color: var(--spbx-text);
+    font-weight: 900;
+    box-sizing: border-box;
+}
+
+.spbx-toggle-row input[type="checkbox"] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 6px !important;
+    accent-color: var(--spbx-blue);
+    appearance: auto !important;
+    -webkit-appearance: checkbox !important;
+    box-shadow: none !important;
+}
+
+.spbx-toggle-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.spbx-toggle-text small {
+    color: var(--spbx-muted);
+    font-weight: 800;
+}
+
+.spbx-2fa-form .spbx-form-actions {
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+    .spbx-2fa-form .spbx-form-actions {
+        display: block !important;
+    }
+
+    .spbx-2fa-form .spbx-form-actions .spbx-button {
+        width: 100%;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.15 - Nebenstellen */
+
+.spbx-ext-layout {
+    display: grid;
+    gap: 18px;
+}
+
+.spbx-ext-card {
+    background: #ffffff;
+    border: 1px solid var(--spbx-border);
+    border-radius: 18px;
+    box-shadow: var(--spbx-shadow);
+    padding: 20px;
+}
+
+.spbx-ext-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.spbx-ext-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.spbx-ext-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 18px 24px;
+    align-items: end;
+}
+
+.spbx-ext-field {
+    min-width: 0;
+}
+
+.spbx-ext-field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.spbx-ext-field input,
+.spbx-ext-field select {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 750 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    box-shadow: none;
+}
+
+.spbx-ext-field input:focus,
+.spbx-ext-field select:focus {
+    border-color: var(--spbx-blue) !important;
+    box-shadow: 0 0 0 3px rgba(22,119,255,.13) !important;
+}
+
+.spbx-ext-help {
+    margin-top: 6px;
+    color: var(--spbx-muted);
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.spbx-ext-toggle {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    background: #f8fbff;
+    color: var(--spbx-text);
+    font-weight: 900;
+}
+
+.spbx-ext-toggle input[type="checkbox"] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    accent-color: var(--spbx-blue);
+    appearance: auto !important;
+    -webkit-appearance: checkbox !important;
+}
+
+.spbx-ext-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.spbx-ext-table {
+    min-width: 980px;
+}
+
+.spbx-ext-badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 950;
+    background: #eef6ff;
+    color: #0f4ea8;
+}
+
+.spbx-ext-badge.off {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.spbx-ext-table-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+    .spbx-ext-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .spbx-ext-header-row {
+        display: grid;
+    }
+
+    .spbx-ext-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .spbx-ext-actions .spbx-button {
+        width: 100%;
+    }
+
+    .spbx-ext-form-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .spbx-ext-form-actions .spbx-button {
+        width: 100%;
+    }
+
+    .spbx-ext-table-actions {
+        justify-content: flex-start;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.17 - DECT M400/M900 */
+.spbx-ext-field label,
+.spbx-ext-field input,
+.spbx-ext-field select,
+.spbx-ext-help {
+    box-sizing: border-box;
+}
+
+.spbx-ext-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.spbx-ext-field input,
+.spbx-ext-field select {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    outline: none !important;
+}
+
+.spbx-ext-field input:focus,
+.spbx-ext-field select:focus {
+    border-color: var(--spbx-blue) !important;
+    box-shadow: 0 0 0 3px rgba(22,119,255,.13) !important;
+}
+
+.spbx-ext-help {
+    color: var(--spbx-muted);
+    font-size: 12px;
+    font-weight: 800;
+    margin-top: 5px;
+}
+
+
+/* ServusPBX Medical 1.0.20 - DECT Handset Only */
+.spbx-ext-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.spbx-ext-field input,
+.spbx-ext-field select {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+.spbx-ext-field input:focus,
+.spbx-ext-field select:focus {
+    border-color: var(--spbx-blue) !important;
+    box-shadow: 0 0 0 3px rgba(22,119,255,.13) !important;
+}
+
+.spbx-ext-help {
+    color: var(--spbx-muted);
+    font-size: 12px;
+    font-weight: 800;
+    margin-top: 5px;
+}
+
+
+/* ServusPBX Medical 1.0.22 - Extension Delete Fix */
+.spbx-button.danger,
+.spbx-button.small.danger {
+    background: #dc2626;
+    color: #fff;
+    border: 1px solid #dc2626;
+}
+.spbx-button.danger:hover,
+.spbx-button.small.danger:hover {
+    box-shadow: 0 10px 22px rgba(220,38,38,.22);
+}
+
+
+/* ServusPBX Medical 1.0.23 - DECT Bases */
+
+.spbx-dect-layout {
+    display: grid;
+    gap: 18px;
+}
+
+.spbx-dect-card {
+    background: #fff;
+    border: 1px solid var(--spbx-border);
+    border-radius: 18px;
+    box-shadow: var(--spbx-shadow);
+    padding: 20px;
+}
+
+.spbx-dect-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.spbx-dect-title {
+    font-size: 20px;
+    font-weight: 950;
+    color: var(--spbx-navy);
+    margin-bottom: 4px;
+}
+
+.spbx-dect-subtitle {
+    color: var(--spbx-muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.spbx-dect-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 18px 24px;
+    align-items: end;
+}
+
+.spbx-dect-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 950;
+}
+
+.spbx-dect-field input,
+.spbx-dect-field select {
+    display: block !important;
+    width: 100% !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+.spbx-dect-field input:focus,
+.spbx-dect-field select:focus {
+    border-color: var(--spbx-blue) !important;
+    box-shadow: 0 0 0 3px rgba(22,119,255,.13) !important;
+}
+
+.spbx-dect-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.spbx-dect-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--spbx-border);
+    border-radius: 16px;
+    background: #fff;
+}
+
+.spbx-dect-table {
+    width: 100%;
+    min-width: 880px;
+    border-collapse: collapse;
+}
+
+.spbx-dect-table th,
+.spbx-dect-table td {
+    padding: 13px 14px;
+    border-bottom: 1px solid #e5edf5;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 800;
+}
+
+.spbx-dect-table th {
+    background: #f8fafc;
+    color: #334155;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    font-weight: 950;
+}
+
+.spbx-dect-table tr:last-child td {
+    border-bottom: 0;
+}
+
+.spbx-dect-table-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.spbx-dect-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eef6ff;
+    color: #0f2d59;
+    font-weight: 950;
+    font-size: 12px;
+}
+
+.spbx-dect-empty {
+    border: 1px dashed #b9c9dc;
+    background: #f8fbff;
+    border-radius: 16px;
+    padding: 26px;
+    text-align: center;
+    color: var(--spbx-muted);
+    font-weight: 800;
+}
+
+.spbx-dect-empty strong {
+    display: block;
+    color: var(--spbx-navy);
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.spbx-dect-assign-box {
+    margin-top: 18px;
+    border: 1px solid var(--spbx-border);
+    border-radius: 16px;
+    background: #f8fbff;
+    padding: 16px;
+}
+
+.spbx-dect-assign-form {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) auto;
+    gap: 12px;
+    align-items: end;
+    margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+    .spbx-dect-grid,
+    .spbx-dect-assign-form {
+        grid-template-columns: 1fr;
+    }
+
+    .spbx-dect-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .spbx-dect-header {
+        display: grid;
+    }
+
+    .spbx-dect-header .spbx-button,
+    .spbx-dect-assign-form .spbx-button {
+        width: 100%;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.24 - DECT Base Select in Extensions */
+#dectBaseField {
+    display: none;
+}
+
+
+/* ServusPBX Medical 1.0.28 - BLF / Funktionstasten */
+
+.spbx-keys-layout {
+    display: grid;
+    gap: 18px;
+}
+
+.spbx-keys-card {
+    background: #fff;
+    border: 1px solid var(--spbx-border);
+    border-radius: 18px;
+    box-shadow: var(--spbx-shadow);
+    padding: 20px;
+}
+
+.spbx-keys-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.spbx-keys-title {
+    font-size: 20px;
+    font-weight: 950;
+    color: var(--spbx-navy);
+    margin-bottom: 4px;
+}
+
+.spbx-keys-subtitle {
+    color: var(--spbx-muted);
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.spbx-keys-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.spbx-keys-tab {
+    min-height: 42px;
+    padding: 9px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--spbx-border);
+    background: #fff;
+    color: var(--spbx-navy);
+    font-weight: 950;
+    cursor: pointer;
+}
+
+.spbx-keys-tab.active {
+    background: var(--spbx-blue);
+    color: #fff;
+    border-color: var(--spbx-blue);
+}
+
+.spbx-keys-page {
+    display: none;
+}
+
+.spbx-keys-page.active {
+    display: grid;
+    gap: 12px;
+}
+
+.spbx-key-row {
+    display: grid;
+    grid-template-columns: 90px 150px 1fr 1fr;
+    gap: 12px;
+    align-items: end;
+    padding: 12px;
+    border: 1px solid #e5edf5;
+    border-radius: 14px;
+    background: #f8fbff;
+}
+
+.spbx-key-row label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #334155;
+    font-weight: 950;
+}
+
+.spbx-key-index {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-weight: 950;
+    color: var(--spbx-navy);
+}
+
+.spbx-key-row input,
+.spbx-key-row select {
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 10px 12px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    box-sizing: border-box !important;
+}
+
+.spbx-keys-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+    .spbx-key-row {
+        grid-template-columns: 1fr;
+    }
+
+    .spbx-keys-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .spbx-keys-actions .spbx-button {
+        width: 100%;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.29 - BLF stable fix */
+
+/* Nebenstellen: Aktionsbuttons stabil und iPad-tauglich */
+.spbx-extension-actions,
+.spbx-extensions-table-actions {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(92px, 1fr)) !important;
+    gap: 8px !important;
+    justify-content: end !important;
+    align-items: center !important;
+    min-width: 320px !important;
+}
+
+.spbx-extension-actions .spbx-button,
+.spbx-extensions-table-actions .spbx-button {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+
+.spbx-extensions-table th:last-child,
+.spbx-extensions-table td:last-child,
+.spbx-table th:last-child,
+.spbx-table td:last-child {
+    min-width: 330px !important;
+}
+
+.spbx-extensions-table,
+.spbx-table {
+    min-width: 1120px !important;
+}
+
+.spbx-button.keys {
+    background: #eef6ff;
+    color: var(--spbx-navy);
+    border: 1px solid #cfe0f5;
+}
+
+.spbx-button.keys:hover {
+    box-shadow: 0 10px 22px rgba(22,119,255,.14);
+}
+
+/* BLF Editor stabil */
+.spbx-keys-card {
+    overflow: hidden;
+}
+
+.spbx-key-row {
+    grid-template-columns: 110px 160px minmax(180px, 1fr) minmax(180px, 1fr) !important;
+}
+
+.spbx-keys-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #fff;
+    padding-bottom: 8px;
+}
+
+@media (max-width: 1100px) {
+    .spbx-extension-actions,
+    .spbx-extensions-table-actions {
+        grid-template-columns: 1fr !important;
+        min-width: 150px !important;
+    }
+
+    .spbx-extensions-table th:last-child,
+    .spbx-extensions-table td:last-child,
+    .spbx-table th:last-child,
+    .spbx-table td:last-child {
+        min-width: 170px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .spbx-key-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.30 - BLF Form Final */
+
+.spbx-keys-phone-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.spbx-keys-phone-grid.d810 {
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    max-width: 900px;
+}
+
+.spbx-key-card {
+    border: 1px solid #d7e4f2;
+    background: #f8fbff;
+    border-radius: 16px;
+    padding: 14px;
+    display: grid;
+    gap: 12px;
+}
+
+.spbx-key-card-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+
+.spbx-key-card-title {
+    font-weight: 950;
+    color: var(--spbx-navy);
+    font-size: 16px;
+}
+
+.spbx-key-card-sub {
+    font-weight: 850;
+    color: var(--spbx-muted);
+    font-size: 12px;
+}
+
+.spbx-key-kind {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #eef6ff;
+    color: var(--spbx-navy);
+    font-weight: 950;
+    font-size: 12px;
+}
+
+.spbx-key-fields {
+    display: grid;
+    gap: 10px;
+}
+
+.spbx-key-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 950;
+    color: #334155;
+    margin-bottom: 5px;
+}
+
+.spbx-key-field input,
+.spbx-key-field select {
+    display: block !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    padding: 10px 12px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    color: var(--spbx-text) !important;
+    font: inherit !important;
+    font-weight: 750 !important;
+    box-sizing: border-box !important;
+}
+
+.spbx-key-target-extension,
+.spbx-key-target-number,
+.spbx-key-label,
+.spbx-key-label-forward {
+    display: none;
+}
+
+.spbx-key-card[data-type="blf"] .spbx-key-target-extension,
+.spbx-key-card[data-type="blf"] .spbx-key-label {
+    display: block;
+}
+
+.spbx-key-card[data-type="speed"] .spbx-key-target-number,
+.spbx-key-card[data-type="speed"] .spbx-key-label {
+    display: block;
+}
+
+.spbx-key-card[data-type="forward"] .spbx-key-label-forward {
+    display: block;
+}
+
+@media (max-width: 900px) {
+    .spbx-keys-phone-grid,
+    .spbx-keys-phone-grid.d810 {
+        grid-template-columns: 1fr;
+        max-width: none;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.34 - Nebenstellen Aktionsbuttons sauber */
+
+/* Entfernt die zu breite globale Aktionsspalten-Wirkung aus älteren Builds */
+.spbx-extensions-table th:last-child,
+.spbx-extensions-table td:last-child,
+.spbx-table th:last-child,
+.spbx-table td:last-child {
+    min-width: unset !important;
+}
+
+/* Nur Nebenstellen-Tabelle */
+.spbx-extensions-table .spbx-ext-action-th,
+.spbx-extensions-table .spbx-ext-action-td {
+    width: 168px !important;
+    min-width: 168px !important;
+    max-width: 168px !important;
+    text-align: right !important;
+    vertical-align: middle !important;
+}
+
+.spbx-extensions-table .spbx-ext-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    width: 150px !important;
+    min-width: 150px !important;
+    margin-left: auto !important;
+    justify-items: stretch !important;
+    align-items: stretch !important;
+}
+
+.spbx-extensions-table .spbx-ext-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 38px !important;
+    padding: 8px 10px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+}
+
+.spbx-extensions-table .spbx-ext-btn-keys {
+    background: #eef6ff !important;
+    color: var(--spbx-navy) !important;
+    border: 1px solid #cfe0f5 !important;
+}
+
+.spbx-extensions-table .spbx-ext-btn-keys:hover {
+    box-shadow: 0 10px 22px rgba(22,119,255,.14) !important;
+}
+
+/* Die Tabelle darf horizontal scrollen, aber die Aktion läuft nicht mehr in andere Spalten */
+.spbx-extensions-table {
+    min-width: 1040px !important;
+    table-layout: fixed !important;
+}
+
+.spbx-extensions-table th:nth-child(1),
+.spbx-extensions-table td:nth-child(1) { width: 90px !important; }
+
+.spbx-extensions-table th:nth-child(2),
+.spbx-extensions-table td:nth-child(2) { width: 160px !important; }
+
+.spbx-extensions-table th:nth-child(3),
+.spbx-extensions-table td:nth-child(3) { width: 175px !important; }
+
+.spbx-extensions-table th:nth-child(4),
+.spbx-extensions-table td:nth-child(4) { width: 150px !important; }
+
+.spbx-extensions-table th:nth-child(5),
+.spbx-extensions-table td:nth-child(5),
+.spbx-extensions-table th:nth-child(6),
+.spbx-extensions-table td:nth-child(6),
+.spbx-extensions-table th:nth-child(7),
+.spbx-extensions-table td:nth-child(7),
+.spbx-extensions-table th:nth-child(8),
+.spbx-extensions-table td:nth-child(8) { width: 105px !important; }
+
+@media (max-width: 900px) {
+    .spbx-extensions-table {
+        min-width: 980px !important;
+    }
+
+    .spbx-extensions-table .spbx-ext-action-th,
+    .spbx-extensions-table .spbx-ext-action-td {
+        width: 150px !important;
+        min-width: 150px !important;
+        max-width: 150px !important;
+    }
+
+    .spbx-extensions-table .spbx-ext-actions {
+        width: 132px !important;
+        min-width: 132px !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.36 - Extensions Rebuild */
+.spbx-extensions-table .spbx-ext-action-th,
+.spbx-extensions-table .spbx-ext-action-td {
+    width: 168px !important;
+    min-width: 168px !important;
+    max-width: 168px !important;
+    text-align: right !important;
+    vertical-align: middle !important;
+}
+
+.spbx-extensions-table .spbx-ext-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    width: 150px !important;
+    margin-left: auto !important;
+}
+
+.spbx-extensions-table .spbx-ext-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+
+
+/* ServusPBX Medical 1.0.37 - Extensions CSS Restore */
+
+/* Seite wieder sauber in Card-Optik */
+.spbx-content.spbx-extensions-layout {
+    padding: 20px !important;
+}
+
+.spbx-extensions-layout {
+    display: grid !important;
+    gap: 18px !important;
+}
+
+.spbx-extensions-card {
+    background: #ffffff !important;
+    border: 1px solid var(--spbx-border, #d7e4f2) !important;
+    border-radius: 18px !important;
+    box-shadow: var(--spbx-shadow, 0 18px 45px rgba(15,45,89,.08)) !important;
+    padding: 20px !important;
+}
+
+.spbx-extensions-header {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    flex-wrap: wrap !important;
+    margin-bottom: 18px !important;
+}
+
+.spbx-extensions-title {
+    font-size: 20px !important;
+    font-weight: 950 !important;
+    color: var(--spbx-navy, #001f44) !important;
+    margin-bottom: 4px !important;
+}
+
+.spbx-extensions-subtitle {
+    color: var(--spbx-muted, #5f6f89) !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+}
+
+/* Formular wieder ServusPBX-Style */
+.spbx-extensions-form {
+    margin-top: 18px !important;
+}
+
+.spbx-extensions-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(280px, 1fr)) !important;
+    gap: 18px 24px !important;
+    align-items: end !important;
+}
+
+.spbx-extensions-field {
+    min-width: 0 !important;
+}
+
+.spbx-extensions-field label {
+    display: block !important;
+    margin-bottom: 6px !important;
+    color: #334155 !important;
+    font-size: 13px !important;
+    font-weight: 950 !important;
+}
+
+.spbx-extensions-field input,
+.spbx-extensions-field select {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 46px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    color: var(--spbx-text, #06152b) !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    appearance: auto !important;
+    -webkit-appearance: auto !important;
+}
+
+.spbx-extensions-field input:focus,
+.spbx-extensions-field select:focus {
+    border-color: var(--spbx-blue, #1677ff) !important;
+    box-shadow: 0 0 0 3px rgba(22,119,255,.13) !important;
+}
+
+.spbx-extensions-help {
+    color: var(--spbx-muted, #5f6f89) !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    margin-top: 5px !important;
+}
+
+.spbx-extensions-check {
+    min-height: 46px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 11px 14px !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    background: #f8fbff !important;
+    font-weight: 900 !important;
+    box-sizing: border-box !important;
+}
+
+.spbx-extensions-check input[type="checkbox"] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    accent-color: var(--spbx-blue, #1677ff) !important;
+    appearance: auto !important;
+    -webkit-appearance: checkbox !important;
+}
+
+.spbx-extensions-actions {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 12px !important;
+    margin-top: 24px !important;
+}
+
+/* Tabelle wieder sauber */
+.spbx-extensions-table-wrap {
+    overflow-x: auto !important;
+    border: 1px solid var(--spbx-border, #d7e4f2) !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+}
+
+.spbx-extensions-table {
+    width: 100% !important;
+    min-width: 1120px !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+}
+
+.spbx-extensions-table th,
+.spbx-extensions-table td {
+    padding: 13px 14px !important;
+    border-bottom: 1px solid #e5edf5 !important;
+    text-align: left !important;
+    vertical-align: middle !important;
+    font-weight: 800 !important;
+}
+
+.spbx-extensions-table th {
+    background: #f8fafc !important;
+    color: #334155 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: .04em !important;
+    font-weight: 950 !important;
+}
+
+.spbx-extensions-table tr:last-child td {
+    border-bottom: 0 !important;
+}
+
+.spbx-extensions-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 28px !important;
+    padding: 4px 10px !important;
+    border-radius: 999px !important;
+    background: #eef6ff !important;
+    color: #0f2d59 !important;
+    font-weight: 950 !important;
+    font-size: 12px !important;
+}
+
+/* Spaltenbreiten stabil */
+.spbx-extensions-table th:nth-child(1),
+.spbx-extensions-table td:nth-child(1) { width: 90px !important; }
+
+.spbx-extensions-table th:nth-child(2),
+.spbx-extensions-table td:nth-child(2) { width: 170px !important; }
+
+.spbx-extensions-table th:nth-child(3),
+.spbx-extensions-table td:nth-child(3) { width: 190px !important; }
+
+.spbx-extensions-table th:nth-child(4),
+.spbx-extensions-table td:nth-child(4) { width: 160px !important; }
+
+.spbx-extensions-table th:nth-child(5),
+.spbx-extensions-table td:nth-child(5),
+.spbx-extensions-table th:nth-child(6),
+.spbx-extensions-table td:nth-child(6),
+.spbx-extensions-table th:nth-child(7),
+.spbx-extensions-table td:nth-child(7),
+.spbx-extensions-table th:nth-child(8),
+.spbx-extensions-table td:nth-child(8) { width: 115px !important; }
+
+.spbx-extensions-table .spbx-ext-action-th,
+.spbx-extensions-table .spbx-ext-action-td {
+    width: 168px !important;
+    min-width: 168px !important;
+    max-width: 168px !important;
+    text-align: right !important;
+    vertical-align: middle !important;
+}
+
+.spbx-extensions-table .spbx-ext-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    width: 150px !important;
+    margin-left: auto !important;
+}
+
+.spbx-extensions-table .spbx-ext-btn {
+    width: 100% !important;
+    min-height: 38px !important;
+    padding: 8px 10px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+}
+
+.spbx-extensions-table .spbx-ext-btn-keys {
+    background: #eef6ff !important;
+    color: var(--spbx-navy, #001f44) !important;
+    border: 1px solid #cfe0f5 !important;
+}
+
+/* Empty State */
+.spbx-extensions-empty {
+    border: 1px dashed #b9c9dc !important;
+    background: #f8fbff !important;
+    border-radius: 16px !important;
+    padding: 26px !important;
+    text-align: center !important;
+    color: var(--spbx-muted, #5f6f89) !important;
+    font-weight: 800 !important;
+}
+
+.spbx-extensions-empty strong {
+    display: block !important;
+    color: var(--spbx-navy, #001f44) !important;
+    font-size: 18px !important;
+    margin-bottom: 6px !important;
+}
+
+@media (max-width: 900px) {
+    .spbx-extensions-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .spbx-extensions-actions {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    .spbx-extensions-actions .spbx-button {
+        width: 100% !important;
+    }
+
+    .spbx-extensions-header {
+        display: grid !important;
+    }
+
+    .spbx-extensions-header .spbx-button {
+        width: 100% !important;
+    }
+
+    .spbx-extensions-table {
+        min-width: 1040px !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.44 - Snom Key Layout Fix */
+.spbx-keys-phone-grid.d815 {
+    grid-template-columns: repeat(2, minmax(280px, 1fr)) !important;
+    grid-auto-flow: column !important;
+    grid-template-rows: repeat(5, auto) !important;
+}
+
+.spbx-keys-phone-grid.d810 {
+    grid-template-columns: repeat(2, minmax(260px, 1fr)) !important;
+    grid-auto-flow: column !important;
+    grid-template-rows: repeat(2, auto) !important;
+}
+
+@media (max-width: 900px) {
+    .spbx-keys-phone-grid.d815,
+    .spbx-keys-phone-grid.d810 {
+        grid-template-columns: 1fr !important;
+        grid-auto-flow: row !important;
+        grid-template-rows: none !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.45 - BLF final cleanup */
+
+.spbx-keys-top-actions {
+    display: flex !important;
+    gap: 10px !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+}
+
+.spbx-keys-top-actions form {
+    margin: 0 !important;
+}
+
+.spbx-keys-top-actions .spbx-button {
+    min-height: 40px !important;
+    padding: 9px 13px !important;
+}
+
+.spbx-keys-card {
+    padding: 16px !important;
+}
+
+.spbx-keys-header {
+    margin-bottom: 12px !important;
+}
+
+.spbx-keys-tabs {
+    margin-bottom: 12px !important;
+}
+
+.spbx-keys-tab {
+    min-height: 38px !important;
+    padding: 8px 12px !important;
+}
+
+.spbx-keys-phone-grid {
+    gap: 9px !important;
+}
+
+.spbx-key-card {
+    padding: 9px 10px !important;
+    gap: 7px !important;
+    border-radius: 13px !important;
+}
+
+.spbx-key-card-title {
+    font-size: 14px !important;
+}
+
+.spbx-key-card-sub {
+    font-size: 11px !important;
+}
+
+.spbx-key-kind {
+    min-height: 24px !important;
+    padding: 3px 8px !important;
+    font-size: 11px !important;
+}
+
+.spbx-key-fields {
+    gap: 7px !important;
+}
+
+.spbx-key-field label {
+    font-size: 11px !important;
+    margin-bottom: 3px !important;
+}
+
+.spbx-key-field input,
+.spbx-key-field select {
+    min-height: 36px !important;
+    padding: 7px 9px !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+}
+
+/* D815: 5 Zeilen x 2 Spalten sollen auf einer Seite sichtbar bleiben */
+.spbx-keys-phone-grid.d815 {
+    grid-template-columns: repeat(2, minmax(250px, 1fr)) !important;
+    grid-auto-flow: column !important;
+    grid-template-rows: repeat(5, minmax(96px, auto)) !important;
+}
+
+/* D810: 2 Zeilen x 2 Spalten sehr kompakt */
+.spbx-keys-phone-grid.d810 {
+    grid-template-columns: repeat(2, minmax(250px, 1fr)) !important;
+    grid-auto-flow: column !important;
+    grid-template-rows: repeat(2, minmax(100px, auto)) !important;
+}
+
+.spbx-key-target-extension,
+.spbx-key-target-number,
+.spbx-key-label,
+.spbx-key-label-forward {
+    margin-top: 0 !important;
+}
+
+/* Neue interne Typen */
+.spbx-key-card[data-type="none"] .spbx-key-target-extension,
+.spbx-key-card[data-type="none"] .spbx-key-target-number,
+.spbx-key-card[data-type="none"] .spbx-key-label,
+.spbx-key-card[data-type="none"] .spbx-key-label-forward {
+    display: none !important;
+}
+
+.spbx-key-card[data-type="dest"] .spbx-key-target-number,
+.spbx-key-card[data-type="dest"] .spbx-key-label {
+    display: block !important;
+}
+
+@media (max-width: 900px) {
+    .spbx-keys-top-actions {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        width: 100% !important;
+    }
+
+    .spbx-keys-top-actions .spbx-button,
+    .spbx-keys-top-actions form {
+        width: 100% !important;
+    }
+
+    .spbx-keys-phone-grid.d815,
+    .spbx-keys-phone-grid.d810 {
+        grid-template-columns: 1fr !important;
+        grid-auto-flow: row !important;
+        grid-template-rows: none !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.46 - BLF Desktop Layout Fix */
+
+/* Hauptziel: 24-Zoll Arbeitsplatz. iPad bleibt nutzbar, aber nicht primär für BLF-Administration. */
+.spbx-content.spbx-keys-layout {
+    padding-top: 12px !important;
+}
+
+.spbx-keys-card {
+    padding: 14px !important;
+}
+
+.spbx-keys-header {
+    margin-bottom: 10px !important;
+}
+
+.spbx-keys-title {
+    font-size: 18px !important;
+}
+
+.spbx-keys-subtitle {
+    font-size: 12px !important;
+}
+
+.spbx-keys-tabs {
+    margin-bottom: 10px !important;
+}
+
+.spbx-keys-tab {
+    min-height: 36px !important;
+    padding: 7px 11px !important;
+    border-radius: 10px !important;
+}
+
+.spbx-keys-phone-grid {
+    gap: 8px !important;
+}
+
+/* D815: links fkey0-4, rechts fkey5-9. Rechts wird als Taste 6-10 beschriftet. */
+.spbx-keys-phone-grid.d815 {
+    grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+    grid-auto-flow: column !important;
+    grid-template-rows: repeat(5, minmax(82px, auto)) !important;
+}
+
+/* D810: links fkey0-1, rechts fkey2-3. */
+.spbx-keys-phone-grid.d810 {
+    grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+    grid-auto-flow: column !important;
+    grid-template-rows: repeat(2, minmax(90px, auto)) !important;
+}
+
+.spbx-key-card {
+    padding: 8px 10px !important;
+    gap: 6px !important;
+    border-radius: 12px !important;
+}
+
+.spbx-key-card-head {
+    gap: 8px !important;
+}
+
+.spbx-key-card-title {
+    font-size: 14px !important;
+}
+
+.spbx-key-card-sub {
+    font-size: 10px !important;
+}
+
+.spbx-key-kind {
+    min-height: 22px !important;
+    padding: 2px 7px !important;
+    font-size: 10px !important;
+}
+
+.spbx-key-fields {
+    display: grid !important;
+    grid-template-columns: 150px 1fr 1fr !important;
+    gap: 7px !important;
+    align-items: end !important;
+}
+
+.spbx-key-field label {
+    font-size: 10px !important;
+    margin-bottom: 2px !important;
+}
+
+.spbx-key-field input,
+.spbx-key-field select {
+    min-height: 32px !important;
+    padding: 5px 8px !important;
+    border-radius: 9px !important;
+    font-size: 12px !important;
+}
+
+.spbx-key-card[data-type="none"] .spbx-key-fields {
+    grid-template-columns: 1fr !important;
+}
+
+@media (max-width: 1100px) {
+    .spbx-key-fields {
+        grid-template-columns: 1fr !important;
+    }
+
+    .spbx-keys-phone-grid.d815,
+    .spbx-keys-phone-grid.d810 {
+        grid-template-columns: 1fr !important;
+        grid-auto-flow: row !important;
+        grid-template-rows: none !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.48 - Compact list + D810 layout */
+
+/* Nebenstellenliste kompakter für größere Praxen */
+.spbx-extensions-card {
+    padding: 14px !important;
+}
+
+.spbx-extensions-header {
+    margin-bottom: 12px !important;
+}
+
+.spbx-extensions-title {
+    font-size: 18px !important;
+}
+
+.spbx-extensions-subtitle {
+    font-size: 12px !important;
+}
+
+.spbx-extensions-table th,
+.spbx-extensions-table td {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+}
+
+.spbx-extensions-table th {
+    font-size: 11px !important;
+}
+
+.spbx-extensions-badge {
+    min-height: 24px !important;
+    padding: 3px 8px !important;
+    font-size: 11px !important;
+}
+
+.spbx-extensions-table .spbx-ext-actions {
+    gap: 5px !important;
+    width: 132px !important;
+}
+
+.spbx-extensions-table .spbx-ext-btn {
+    min-height: 32px !important;
+    padding: 6px 9px !important;
+    font-size: 12px !important;
+    border-radius: 9px !important;
+}
+
+.spbx-extensions-table .spbx-ext-action-th,
+.spbx-extensions-table .spbx-ext-action-td {
+    width: 148px !important;
+    min-width: 148px !important;
+    max-width: 148px !important;
+}
+
+.spbx-extensions-table {
+    min-width: 1060px !important;
+}
+
+.spbx-extensions-table th:nth-child(1),
+.spbx-extensions-table td:nth-child(1) { width: 80px !important; }
+
+.spbx-extensions-table th:nth-child(2),
+.spbx-extensions-table td:nth-child(2) { width: 160px !important; }
+
+.spbx-extensions-table th:nth-child(3),
+.spbx-extensions-table td:nth-child(3) { width: 170px !important; }
+
+.spbx-extensions-table th:nth-child(4),
+.spbx-extensions-table td:nth-child(4) { width: 135px !important; }
+
+.spbx-extensions-table th:nth-child(5),
+.spbx-extensions-table td:nth-child(5),
+.spbx-extensions-table th:nth-child(6),
+.spbx-extensions-table td:nth-child(6),
+.spbx-extensions-table th:nth-child(7),
+.spbx-extensions-table td:nth-child(7),
+.spbx-extensions-table th:nth-child(8),
+.spbx-extensions-table td:nth-child(8) { width: 100px !important; }
+
+/* D810: vier Tasten rechts am Display untereinander, keine zweite Spalte */
+.spbx-keys-phone-grid.d810 {
+    grid-template-columns: minmax(420px, 760px) !important;
+    grid-auto-flow: row !important;
+    grid-template-rows: repeat(4, minmax(82px, auto)) !important;
+    max-width: 780px !important;
+}
+
+/* D815 bleibt links fkey0-4 und rechts fkey5-9 */
+.spbx-keys-phone-grid.d815 {
+    grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+    grid-auto-flow: column !important;
+    grid-template-rows: repeat(5, minmax(82px, auto)) !important;
+}
+
+@media (max-width: 1100px) {
+    .spbx-keys-phone-grid.d810 {
+        grid-template-columns: 1fr !important;
+        max-width: none !important;
+        grid-template-rows: none !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.49 - Nebenstellen Übersicht Cleanup */
+.spbx-extensions-table {
+    min-width: 900px !important;
+}
+
+.spbx-extensions-table th:nth-child(1),
+.spbx-extensions-table td:nth-child(1) { width: 90px !important; }
+
+.spbx-extensions-table th:nth-child(2),
+.spbx-extensions-table td:nth-child(2) { width: 190px !important; }
+
+.spbx-extensions-table th:nth-child(3),
+.spbx-extensions-table td:nth-child(3) { width: 190px !important; }
+
+.spbx-extensions-table th:nth-child(4),
+.spbx-extensions-table td:nth-child(4),
+.spbx-extensions-table th:nth-child(5),
+.spbx-extensions-table td:nth-child(5),
+.spbx-extensions-table th:nth-child(6),
+.spbx-extensions-table td:nth-child(6),
+.spbx-extensions-table th:nth-child(7),
+.spbx-extensions-table td:nth-child(7) { width: 110px !important; }
+
+.spbx-extensions-table .spbx-ext-action-th,
+.spbx-extensions-table .spbx-ext-action-td {
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+}
+
+
+/* ServusPBX Medical 1.0.50 - Nebenstellen Buttons nebeneinander */
+
+.spbx-extensions-table {
+    min-width: 1080px !important;
+}
+
+.spbx-extensions-table .spbx-ext-action-th,
+.spbx-extensions-table .spbx-ext-action-td {
+    width: 330px !important;
+    min-width: 330px !important;
+    max-width: 330px !important;
+    text-align: right !important;
+    vertical-align: middle !important;
+}
+
+.spbx-extensions-table .spbx-ext-actions {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    width: 315px !important;
+    min-width: 315px !important;
+    margin-left: auto !important;
+    align-items: center !important;
+}
+
+.spbx-extensions-table .spbx-ext-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 32px !important;
+    padding: 6px 8px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    font-size: 12px !important;
+    border-radius: 9px !important;
+}
+
+@media (max-width: 1100px) {
+    .spbx-extensions-table {
+        min-width: 1120px !important;
+    }
+
+    .spbx-extensions-table .spbx-ext-action-th,
+    .spbx-extensions-table .spbx-ext-action-td {
+        width: 315px !important;
+        min-width: 315px !important;
+        max-width: 315px !important;
+    }
+
+    .spbx-extensions-table .spbx-ext-actions {
+        width: 300px !important;
+        min-width: 300px !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.51 - Nebenstellen Übersicht final */
+
+/* Kein horizontaler Scrollbalken in der Übersicht */
+.spbx-extensions-table-wrap {
+    overflow-x: visible !important;
+}
+
+.spbx-extensions-table {
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+}
+
+/* Spalten nach Entfernen von Endpoint-ID und Voicemail */
+.spbx-extensions-table th:nth-child(1),
+.spbx-extensions-table td:nth-child(1) {
+    width: 80px !important;
+}
+
+.spbx-extensions-table th:nth-child(2),
+.spbx-extensions-table td:nth-child(2) {
+    width: 210px !important;
+}
+
+.spbx-extensions-table th:nth-child(3),
+.spbx-extensions-table td:nth-child(3) {
+    width: 230px !important;
+}
+
+.spbx-extensions-table th:nth-child(4),
+.spbx-extensions-table td:nth-child(4),
+.spbx-extensions-table th:nth-child(5),
+.spbx-extensions-table td:nth-child(5),
+.spbx-extensions-table th:nth-child(6),
+.spbx-extensions-table td:nth-child(6) {
+    width: 120px !important;
+}
+
+/* Aktion bekommt den Rest und Buttons stehen nebeneinander */
+.spbx-extensions-table .spbx-ext-action-th,
+.spbx-extensions-table .spbx-ext-action-td {
+    width: 330px !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    text-align: right !important;
+}
+
+.spbx-extensions-table .spbx-ext-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+}
+
+.spbx-extensions-table .spbx-ext-btn {
+    flex: 0 0 auto !important;
+    width: 96px !important;
+    min-width: 96px !important;
+    min-height: 32px !important;
+    padding: 6px 8px !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    font-size: 12px !important;
+    border-radius: 9px !important;
+}
+
+@media (max-width: 1200px) {
+    .spbx-extensions-table th:nth-child(2),
+    .spbx-extensions-table td:nth-child(2) {
+        width: 170px !important;
+    }
+
+    .spbx-extensions-table th:nth-child(3),
+    .spbx-extensions-table td:nth-child(3) {
+        width: 190px !important;
+    }
+
+    .spbx-extensions-table .spbx-ext-btn {
+        width: 88px !important;
+        min-width: 88px !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.52 - FINAL Nebenstellen Buttons inline */
+
+/*
+   Finale Vorgabe:
+   - Endpoint-ID entfernt
+   - Voicemail entfernt
+   - kein horizontaler Scrollbalken
+   - Aktionen nebeneinander
+*/
+
+.spbx-content .spbx-extensions-table-wrap {
+    overflow-x: hidden !important;
+}
+
+.spbx-content table.spbx-extensions-table {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+}
+
+/* 7 sichtbare Spalten:
+   1 Durchwahl
+   2 Name
+   3 Gerät
+   4 Registriert
+   5 Provisioning
+   6 Status
+   7 Aktion
+*/
+.spbx-content table.spbx-extensions-table th:nth-child(1),
+.spbx-content table.spbx-extensions-table td:nth-child(1) {
+    width: 80px !important;
+}
+
+.spbx-content table.spbx-extensions-table th:nth-child(2),
+.spbx-content table.spbx-extensions-table td:nth-child(2) {
+    width: 220px !important;
+}
+
+.spbx-content table.spbx-extensions-table th:nth-child(3),
+.spbx-content table.spbx-extensions-table td:nth-child(3) {
+    width: 250px !important;
+}
+
+.spbx-content table.spbx-extensions-table th:nth-child(4),
+.spbx-content table.spbx-extensions-table td:nth-child(4),
+.spbx-content table.spbx-extensions-table th:nth-child(5),
+.spbx-content table.spbx-extensions-table td:nth-child(5),
+.spbx-content table.spbx-extensions-table th:nth-child(6),
+.spbx-content table.spbx-extensions-table td:nth-child(6) {
+    width: 120px !important;
+}
+
+.spbx-content table.spbx-extensions-table th.spbx-ext-action-th,
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td,
+.spbx-content table.spbx-extensions-table th:nth-child(7),
+.spbx-content table.spbx-extensions-table td:nth-child(7) {
+    width: 330px !important;
+    min-width: 330px !important;
+    max-width: 330px !important;
+    text-align: right !important;
+    vertical-align: middle !important;
+}
+
+.spbx-content table.spbx-extensions-table th,
+.spbx-content table.spbx-extensions-table td {
+    padding: 8px 12px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    vertical-align: middle !important;
+}
+
+/* Wichtig: mit höherer Spezifität alle alten Grid-1-Spalten-Regeln überschreiben */
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions,
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions-inline {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+}
+
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions .spbx-ext-btn,
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions-inline .spbx-ext-btn {
+    display: inline-flex !important;
+    flex: 0 0 96px !important;
+    width: 96px !important;
+    min-width: 96px !important;
+    max-width: 96px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 6px 8px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    border-radius: 9px !important;
+}
+
+@media (max-width: 1250px) {
+    .spbx-content table.spbx-extensions-table th:nth-child(2),
+    .spbx-content table.spbx-extensions-table td:nth-child(2) {
+        width: 180px !important;
+    }
+
+    .spbx-content table.spbx-extensions-table th:nth-child(3),
+    .spbx-content table.spbx-extensions-table td:nth-child(3) {
+        width: 200px !important;
+    }
+
+    .spbx-content table.spbx-extensions-table th.spbx-ext-action-th,
+    .spbx-content table.spbx-extensions-table td.spbx-ext-action-td,
+    .spbx-content table.spbx-extensions-table th:nth-child(7),
+    .spbx-content table.spbx-extensions-table td:nth-child(7) {
+        width: 300px !important;
+        min-width: 300px !important;
+        max-width: 300px !important;
+    }
+
+    .spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions .spbx-ext-btn,
+    .spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions-inline .spbx-ext-btn {
+        flex-basis: 88px !important;
+        width: 88px !important;
+        min-width: 88px !important;
+        max-width: 88px !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.0.62 - Notify Debug + 4 action buttons */
+.spbx-content table.spbx-extensions-table th.spbx-ext-action-th,
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td,
+.spbx-content table.spbx-extensions-table th:nth-child(7),
+.spbx-content table.spbx-extensions-table td:nth-child(7) {
+    width: 410px !important;
+    min-width: 410px !important;
+    max-width: 410px !important;
+}
+
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions,
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions-inline {
+    gap: 7px !important;
+}
+
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions .spbx-ext-btn,
+.spbx-content table.spbx-extensions-table td.spbx-ext-action-td .spbx-ext-actions-inline .spbx-ext-btn {
+    flex: 0 0 88px !important;
+    width: 88px !important;
+    min-width: 88px !important;
+    max-width: 88px !important;
+}
+
+
+
+
+/* ServusPBX Medical 1.8.7 - Gigaset P82x final 2-column layout */
+/* Reihenfolge kommt aus PHP: [0,4,1,5,2,6,3,7].
+   CSS darf daher NICHT column-flow verwenden. */
+.spbx-keys-phone-grid.p82x {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+    grid-auto-flow: row !important;
+    grid-template-rows: repeat(4, minmax(82px, auto)) !important;
+    gap: 8px !important;
+}
+
+.spbx-keys-phone-grid.p85x {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+    grid-auto-flow: column !important;
+    grid-template-rows: repeat(5, minmax(82px, auto)) !important;
+    gap: 8px !important;
+}
+
+@media (max-width: 900px) {
+    .spbx-keys-phone-grid.p82x,
+    .spbx-keys-phone-grid.p85x {
+        grid-template-columns: 1fr !important;
+        grid-auto-flow: row !important;
+        grid-template-rows: auto !important;
+    }
+}
+
+
+/* ServusPBX Medical 1.9.1 - Einheitliche kompakte Listenhöhe
+   Basis: Nebenstellenliste. Alle Tabellen-/Listenzeilen werden niedriger und dichter. */
+.spbx-table th,
+.spbx-table td {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    line-height: 1.25 !important;
+    vertical-align: middle !important;
+}
+
+.spbx-table .spbx-button,
+.spbx-table button,
+.spbx-table .spbx-button.small {
+    min-height: 34px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+}
+
+.spbx-table-wrap table th,
+.spbx-table-wrap table td {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    line-height: 1.25 !important;
+    vertical-align: middle !important;
+}
+
+/* Card-/Listenzeilen, falls einzelne Seiten keine spbx-table verwenden */
+.spbx-list-row,
+.spbx-row,
+.spbx-item-row,
+.spbx-device-row,
+.spbx-extension-row,
+.spbx-route-row,
+.spbx-trunk-row {
+    min-height: 44px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    line-height: 1.25 !important;
+}
+
+/* Formulare innerhalb Tabellen sollen die Zeilen nicht unnötig aufblasen */
+.spbx-table td form,
+.spbx-table-wrap td form {
+    margin: 0 !important;
+}
+
+.spbx-table td input,
+.spbx-table td select,
+.spbx-table-wrap td input,
+.spbx-table-wrap td select {
+    min-height: 34px !important;
+}
+
+
+/* ServusPBX Medical 2.0.0 - Proxmox-inspirierte Navigation */
+:root {
+    --spbx-navy: #1f3f5f;
+    --spbx-navy-2: #17324d;
+    --spbx-sidebar-bg: #234866;
+    --spbx-sidebar-bg-2: #1b3954;
+    --spbx-sidebar-hover: rgba(255,255,255,.10);
+    --spbx-sidebar-active: rgba(255,255,255,.16);
+    --spbx-red: #d33a32;
+}
+
+.spbx-sidebar {
+    width: 252px !important;
+    background: linear-gradient(180deg, var(--spbx-sidebar-bg) 0%, var(--spbx-sidebar-bg-2) 100%) !important;
+    color: #fff !important;
+    box-shadow: 2px 0 12px rgba(0,0,0,.14);
+}
+
+.spbx-sidebar-logo {
+    padding: 18px 18px 16px !important;
+    text-align: left !important;
+    border-bottom: 1px solid rgba(255,255,255,.12) !important;
+}
+
+.spbx-sidebar-logo img {
+    display: none !important;
+}
+
+.spbx-wordmark {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+    letter-spacing: -.6px;
+    line-height: 1;
+    font-family: "Bahnschrift SemiBold", Bahnschrift, "Segoe UI Semibold", "Segoe UI", Arial, sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+}
+
+.spbx-wordmark-servus {
+    color: #fff;
+}
+
+.spbx-wordmark-pbx {
+    color: var(--spbx-red);
+    margin-left: 1px;
+}
+
+.spbx-wordmark-sub {
+    margin-top: 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: rgba(255,255,255,.58);
+    font-weight: 800;
+}
+
+.spbx-nav {
+    padding: 12px 10px 18px !important;
+    gap: 2px !important;
+    overflow-y: auto;
+}
+
+.spbx-nav-section {
+    margin: 16px 10px 6px;
+    font-size: 10px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 1.1px;
+    font-weight: 900;
+    color: rgba(255,255,255,.43);
+}
+
+.spbx-nav a {
+    min-height: 34px !important;
+    padding: 7px 10px !important;
+    border-radius: 3px !important;
+    gap: 10px !important;
+    color: rgba(255,255,255,.82) !important;
+    font-weight: 750 !important;
+    transition: background .12s ease, color .12s ease;
+}
+
+.spbx-nav a:hover {
+    background: var(--spbx-sidebar-hover) !important;
+    color: #fff !important;
+}
+
+.spbx-nav a.active {
+    background: var(--spbx-sidebar-active) !important;
+    color: #fff !important;
+    box-shadow: inset 3px 0 0 var(--spbx-red);
+}
+
+.spbx-nav-icon {
+    width: 20px !important;
+    height: 20px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 20px;
+    color: rgba(255,255,255,.94);
+}
+
+.spbx-nav-icon svg {
+    width: 19px;
+    height: 19px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.spbx-nav a.active .spbx-nav-icon {
+    color: #fff;
+}
+
+.spbx-main {
+    margin-left: 252px !important;
+    width: calc(100% - 252px) !important;
+}
+
+.spbx-topbar {
+    height: 64px !important;
+}
+
+
+/* ServusPBX Professional 2.0.2 - UI Refinement */
+.spbx-wordmark {
+    font-family: "Bahnschrift SemiBold", Bahnschrift, "Segoe UI", Arial, sans-serif !important;
+    font-size: 29px !important;
+    letter-spacing: -.9px !important;
+    position: relative;
+}
+
+.spbx-wordmark-registered {
+    color: rgba(255,255,255,.78);
+    font-size: 10px;
+    line-height: 1;
+    margin-left: 3px;
+    position: relative;
+    top: -11px;
+    font-weight: 700;
+}
+
+.spbx-wordmark-sub {
+    font-family: "Bahnschrift SemiBold", Bahnschrift, "Segoe UI", Arial, sans-serif !important;
+}
+
+/* Proxmox-inspirierte Schärfung: weniger weich, mehr Admin-Konsole */
+:root {
+    --spbx-radius: 8px;
+    --spbx-shadow: 0 1px 2px rgba(15, 31, 58, .08);
+    --spbx-border: #cfd8e3;
+    --spbx-bg: #eef2f6;
+}
+
+.spbx-card,
+.spbx-keys-card,
+.spbx-login-card {
+    border-radius: 8px !important;
+    box-shadow: 0 1px 2px rgba(15,31,58,.08) !important;
+    border: 1px solid #cfd8e3 !important;
+}
+
+.spbx-card-head,
+.spbx-keys-header {
+    border-bottom: 1px solid #d7e0ea;
+    padding-bottom: 12px;
+}
+
+.spbx-card-title,
+.spbx-keys-title,
+.spbx-page-title {
+    font-family: "Bahnschrift SemiBold", Bahnschrift, "Segoe UI", Arial, sans-serif !important;
+    letter-spacing: -.2px;
+}
+
+.spbx-button {
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    font-weight: 750 !important;
+}
+
+.spbx-button.primary {
+    background: #2f6fa3 !important;
+}
+
+.spbx-button.primary:hover {
+    background: #285f8d !important;
+}
+
+.spbx-table {
+    border-collapse: collapse !important;
+}
+
+.spbx-table th {
+    background: #f3f6fa !important;
+    color: #334155 !important;
+    font-weight: 850 !important;
+    border-bottom: 1px solid #ccd7e4 !important;
+}
+
+.spbx-table td {
+    border-bottom: 1px solid #e0e7ef !important;
+}
+
+.spbx-table tbody tr:hover td {
+    background: #f7fafc !important;
+}
+
+.spbx-input,
+.spbx-select,
+.spbx-textarea,
+.spbx-form input,
+.spbx-form select,
+.spbx-form textarea {
+    border-radius: 4px !important;
+    box-shadow: none !important;
+}
+
+.spbx-topbar {
+    box-shadow: 0 1px 2px rgba(15,31,58,.04);
+}
+
+.spbx-alert {
+    border-radius: 5px !important;
+}
+
+
+/* ServusPBX Professional 2.0.3 - Dashboard SVG Icons */
+.spbx-stat-icon {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 6px !important;
+    background: #2f6fa3 !important;
+    color: #fff !important;
+    font-size: 0 !important;
+    flex: 0 0 42px;
+}
+
+.spbx-dashboard-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    vertical-align: -4px;
+    color: currentColor;
+}
+
+.spbx-stat-icon .spbx-dashboard-icon {
+    width: 22px;
+    height: 22px;
+}
+
+.spbx-dashboard-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.spbx-card-title .spbx-dashboard-icon {
+    margin-right: 8px;
+    color: #2f6fa3;
+}
+
+.spbx-action-card .spbx-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+
+/* ServusPBX Professional 2.0.4 - Active Calls Dashboard */
+.spbx-active-calls-card { margin-top: 18px; }
+.spbx-active-calls-count {
+    font-size: 12px; font-weight: 850; color: #2f6fa3; background: #eef6ff;
+    border: 1px solid #cfe0f3; border-radius: 999px; padding: 5px 10px;
+}
+.spbx-active-calls-wrap { margin-top: 12px; }
+.spbx-active-calls-empty { text-align: center; color: #64748b; font-weight: 700; padding: 16px !important; }
+.spbx-call-status {
+    display: inline-flex; align-items: center; min-height: 22px; padding: 2px 8px;
+    border-radius: 999px; background: #e8f7ef; color: #147a3c; font-weight: 850; font-size: 12px;
+}
+.spbx-active-calls-table td, .spbx-active-calls-table th { white-space: nowrap; }
+
+
+/* ServusPBX Professional 2.0.5 - Extensions list modern UI */
+.spbx-extensions-table th,
+.spbx-extensions-table td {
+    vertical-align: middle !important;
+}
+
+.spbx-ext-col-extension {
+    font-size: 15px;
+    width: 90px;
+}
+
+.spbx-ext-col-device {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 210px;
+}
+
+.spbx-ext-col-callerid {
+    font-family: "Bahnschrift", "Segoe UI", Arial, sans-serif;
+    white-space: nowrap;
+    color: #334155;
+}
+
+.spbx-device-svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: #0f172a;
+    flex: 0 0 30px;
+}
+
+.spbx-device-svg svg {
+    width: 30px;
+    height: 30px;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.spbx-device-svg-dect svg {
+    width: 28px;
+    height: 28px;
+}
+
+.spbx-ext-actions-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    justify-content: flex-end;
+}
+
+.spbx-ext-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 92px;
+    min-height: 32px !important;
+    padding: 6px 10px !important;
+}
+
+.spbx-action-svg {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.spbx-action-svg svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.spbx-button.danger .spbx-action-svg {
+    color: #fff;
+}
+
+
+/* ServusPBX Professional 2.0.6 - Calls direction + MAC column */
+.spbx-ext-col-mac {
+    font-family: "Bahnschrift", "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: .2px;
+    color: #475569;
+    white-space: nowrap;
+}
+
+
+/* ServusPBX Professional 2.0.9 - Extensions table cleanup */
+.spbx-extensions-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.spbx-extensions-table th:nth-child(1),
+.spbx-extensions-table td:nth-child(1) {
+    width: 90px;
+}
+
+.spbx-extensions-table th:nth-child(2),
+.spbx-extensions-table td:nth-child(2) {
+    width: 250px;
+}
+
+.spbx-extensions-table th:nth-child(3),
+.spbx-extensions-table td:nth-child(3) {
+    width: 170px;
+}
+
+.spbx-extensions-table th:nth-child(4),
+.spbx-extensions-table td:nth-child(4) {
+    width: 260px;
+}
+
+.spbx-extensions-table th:nth-child(5),
+.spbx-extensions-table td:nth-child(5) {
+    width: 125px;
+}
+
+.spbx-extensions-table th:nth-child(6),
+.spbx-extensions-table td:nth-child(6) {
+    width: 420px;
+}
+
+.spbx-ext-col-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 800;
+}
+
+.spbx-ext-col-device strong {
+    white-space: nowrap;
+}
+
+.spbx-ext-col-mac:empty::after {
+    content: "—";
+    color: #94a3b8;
+}
+
+.spbx-ext-col-callerid {
+    display: none;
+}
+
+
+/* ServusPBX Professional 2.2.1 - D8xx/P8xx key layouts */
+.spbx-keys-phone-grid.p82x {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+    grid-auto-flow: row !important;
+    grid-template-rows: repeat(4, minmax(82px, auto)) !important;
+}
+
+.spbx-keys-phone-grid.d810 {
+    display: grid !important;
+    grid-template-columns: minmax(420px, 760px) !important;
+    grid-auto-flow: row !important;
+    grid-template-rows: repeat(4, minmax(82px, auto)) !important;
+    max-width: 780px !important;
+}
+
+
+/* ServusPBX Professional 2.3.1 - Session + Login UI */
+.spbx-login-professional {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(65, 121, 164, .32), transparent 32%),
+        linear-gradient(135deg, #12263a 0%, #1e425f 48%, #163149 100%) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+}
+
+.spbx-login-shell {
+    width: min(940px, 100%);
+    min-height: 520px;
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 24px 60px rgba(0,0,0,.28);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.spbx-login-brand-panel {
+    padding: 52px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+}
+
+.spbx-login-wordmark {
+    font-family: "Bahnschrift SemiBold", Bahnschrift, "Segoe UI", Arial, sans-serif;
+    font-size: 48px;
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+}
+
+.spbx-login-wordmark-servus { color: #fff; }
+.spbx-login-wordmark-pbx { color: #d33a32; }
+.spbx-login-wordmark sup {
+    font-size: 13px;
+    margin-left: 4px;
+    position: relative;
+    top: -24px;
+    color: rgba(255,255,255,.78);
+}
+
+.spbx-login-edition {
+    margin-top: 12px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.7px;
+    font-weight: 900;
+    color: rgba(255,255,255,.64);
+}
+
+.spbx-login-claim {
+    margin-top: 42px;
+    max-width: 360px;
+    color: rgba(255,255,255,.72);
+    font-weight: 700;
+}
+
+.spbx-login-card-pro {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 48px 42px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #f8fafc !important;
+}
+
+.spbx-login-card-head {
+    margin-bottom: 24px;
+}
+
+.spbx-login-title {
+    font-family: "Bahnschrift SemiBold", Bahnschrift, "Segoe UI", Arial, sans-serif !important;
+    font-size: 28px !important;
+    font-weight: 900 !important;
+    color: #172033 !important;
+    margin: 0 !important;
+}
+
+.spbx-login-subtitle {
+    margin-top: 5px !important;
+    color: #64748b !important;
+    font-size: 13px !important;
+    font-weight: 750;
+}
+
+.spbx-login-form {
+    display: grid;
+    gap: 14px;
+}
+
+.spbx-password-wrap {
+    display: flex;
+    gap: 8px;
+}
+
+.spbx-password-wrap .spbx-input {
+    flex: 1;
+}
+
+.spbx-password-toggle {
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #334155;
+    border-radius: 4px;
+    padding: 0 12px;
+    font-weight: 850;
+    cursor: pointer;
+}
+
+.spbx-password-toggle:hover {
+    background: #f1f5f9;
+}
+
+.spbx-login-footer {
+    margin-top: 24px;
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 800;
+    text-align: center;
+}
+
+@media (max-width: 760px) {
+    .spbx-login-shell {
+        grid-template-columns: 1fr;
+    }
+    .spbx-login-brand-panel {
+        padding: 30px;
+    }
+    .spbx-login-card-pro {
+        padding: 32px 26px !important;
+    }
+}
+
+/* ServusPBX Professional 2.6.25 - verbindliche Tastenlayouts nach Gerätematrix
+   D810/P810: 4 Tasten rechts, einspaltig.
+   D812/D862/D865/D892/P82x: 1-4 links, 5-8 rechts.
+   D815/P85x: 1-5 links, 6-10 rechts.
+   D895: 1-7 links, 8-14 rechts.
+   Die Reihenfolge kommt aus PHP interleaved [links,rechts,...]; daher row-flow. */
+.spbx-keys-phone-grid.d810 {
+    display: grid !important;
+    grid-template-columns: minmax(420px, 760px) !important;
+    grid-auto-flow: row !important;
+    grid-template-rows: repeat(4, minmax(82px, auto)) !important;
+    max-width: 780px !important;
+}
+
+.spbx-keys-phone-grid.p82x {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+    grid-auto-flow: row !important;
+    grid-template-rows: repeat(4, minmax(82px, auto)) !important;
+    gap: 8px !important;
+}
+
+.spbx-keys-phone-grid.d815,
+.spbx-keys-phone-grid.p85x {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+    grid-auto-flow: row !important;
+    grid-template-rows: repeat(5, minmax(82px, auto)) !important;
+    gap: 8px !important;
+}
+
+.spbx-keys-phone-grid.d895 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(360px, 1fr)) !important;
+    grid-auto-flow: row !important;
+    grid-template-rows: repeat(7, minmax(82px, auto)) !important;
+    gap: 8px !important;
+}
+
+@media (max-width: 900px) {
+    .spbx-keys-phone-grid.d810,
+    .spbx-keys-phone-grid.p82x,
+    .spbx-keys-phone-grid.d815,
+    .spbx-keys-phone-grid.p85x,
+    .spbx-keys-phone-grid.d895 {
+        grid-template-columns: 1fr !important;
+        grid-auto-flow: row !important;
+        grid-template-rows: auto !important;
+        max-width: none !important;
+    }
+}
+
+
+/* ServusPBX 2.6.28: Nebenstellen-Status farbig */
+.spbx-extensions-badge-online {
+    background: #dcfce7 !important;
+    color: #166534 !important;
+    border: 1px solid #86efac !important;
+}
+
+.spbx-extensions-badge-offline {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+    border: 1px solid #fecaca !important;
+}
