@@ -3,6 +3,7 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/asterisk.php';
 require_once __DIR__ . '/ast_config_writer.php';
 require_once __DIR__ . '/ring_groups.php';
+require_once __DIR__ . '/ivr.php';
 
 function spbx_call_rules_install_schema()
 {
@@ -182,7 +183,7 @@ function spbx_call_rules_target($rule)
         return 'queue-services,' . $ext . ',1';
     }
     if ($type === 'ivr') {
-        return 'ivr,' . $ext . ',1';
+        return spbx_ivr_context_for_number($ext) . ',s,1';
     }
 
     return $ctx . ',' . $ext . ',1';
@@ -206,7 +207,7 @@ function spbx_call_rules_build_destination($type, $ctx, $exten, $defaultCtx = ''
     }
     if ($type === 'ringgroup') return ['Goto', 'ringgroups,' . $exten . ',1'];
     if ($type === 'queue') return ['Goto', 'queue-services,' . $exten . ',1'];
-    if ($type === 'ivr') return ['Goto', 'ivr,' . $exten . ',1'];
+    if ($type === 'ivr') return ['Goto', spbx_ivr_context_for_number($exten) . ',s,1'];
     if ($type === 'extension') {
         if ($ctx === '' || $ctx === 'auto_internal') $ctx = $defaultCtx !== '' ? $defaultCtx : 'internal';
         return ['Goto', $ctx . ',' . $exten . ',1'];

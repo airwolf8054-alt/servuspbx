@@ -94,7 +94,7 @@ function cr_target_label($r) {
         return 'Queue → queue-services,' . $ext . ',1';
     }
     if ($type === 'ivr') {
-        return 'Sprachmenü → ivr,' . $ext . ',1';
+        return 'Sprachmenü → ' . spbx_ivr_context_for_number($ext) . ',s,1';
     }
     if ($type === 'extension') {
         return 'Nebenstelle → ' . $ctx . ',' . $ext . ',1';
@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($openType === 'ivr') {
             $targetIvr = trim((string)($_POST['target_ivr'] ?? ''));
             if ($targetIvr !== '') {
-                $openCtx = 'ivr';
+                $openCtx = spbx_ivr_context_for_number($targetIvr);
                 $openExten = $targetIvr;
             }
         } elseif ($openType !== 'custom') {
@@ -670,7 +670,7 @@ $didPatterns[] = ['label' => 'Nur 4-stellige DW', 'value' => '_XXXX'];
 
                             <div class="spbx-field" id="target_ivr_box">
                                 <label>Sprachmenü (IVR)</label>
-                                <select name="target_ivr" onchange="document.getElementById('open_destination_context').value='ivr';document.getElementById('open_destination_exten').value=this.value;">
+                                <select name="target_ivr" onchange="document.getElementById('open_destination_context').value=this.value ? ('ivr_' + this.value.replace(/\D/g,'')) : '';document.getElementById('open_destination_exten').value=this.value;">
                                     <option value="">Bitte wählen</option>
                                     <?php foreach ($callRuleIvrs as $ivrItem): ?>
                                         <option value="<?php echo cr_h($ivrItem['number']); ?>" <?php echo ($edit['open_destination_type']==='ivr' && $edit['open_destination_exten']===$ivrItem['number']) ? 'selected' : ''; ?>>
