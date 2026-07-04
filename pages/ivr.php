@@ -52,6 +52,66 @@ function spbx_ivr_target_select($name, $selected, $allowRepeat = true)
     return $html;
 }
 
+function spbx_ivr_target_value($type, $exten = '')
+{
+    $type = trim((string)$type);
+    $exten = trim((string)$exten);
+    if ($type === '' || $type === 'none') return 'none|';
+    if ($type === 'hangup') return 'hangup|';
+    if ($type === 'repeat') return 'repeat|';
+    return $type . '|' . $exten;
+}
+
+function spbx_ivr_parse_target_value($value)
+{
+    $parts = explode('|', (string)$value, 2);
+    $type = $parts[0] ?? 'none';
+    $exten = $parts[1] ?? '';
+    if (!isset(spbx_ivr_target_types()[$type])) $type = 'none';
+    if ($type === 'none' || $type === 'hangup' || $type === 'repeat') $exten = '';
+    return [$type, '', trim((string)$exten)];
+}
+
+function spbx_ivr_target_catalog($extensions, $queues, $ringgroups, $ivrs, $currentId = 0, $allowRepeat = true)
+{
+    $items = [];
+    $items[] = ['value'=>'none|', 'label'=>'Nicht belegt', 'short'=>'+', 'type'=>'none'];
+    foreach ($queues as $q) {
+        $name = trim((string)($q['queue_name'] ?? 'Queue'));
+        $num = trim((string)($q['queue_number'] ?? ''));
+        if ($num !== '') $items[] = ['value'=>'queue|' . $num, 'label'=>$name . ' (Queue ' . $num . ')', 'short'=>$name, 'type'=>'queue'];
+    }
+    foreach ($extensions as $e) {
+        $num = trim((string)($e['extension'] ?? ''));
+        $name = trim((string)($e['display_name'] ?? ''));
+        if ($num !== '') $items[] = ['value'=>'extension|' . $num, 'label'=>($name !== '' ? $name : 'Nebenstelle') . ' (' . $num . ')', 'short'=>($name !== '' ? $name : $num), 'type'=>'extension'];
+    }
+    foreach ($ringgroups as $g) {
+        $num = trim((string)($g['group_number'] ?? ''));
+        $name = trim((string)($g['name'] ?? 'Rufgruppe'));
+        if ($num !== '') $items[] = ['value'=>'ringgroup|' . $num, 'label'=>$name . ' (Rufgruppe ' . $num . ')', 'short'=>$name, 'type'=>'ringgroup'];
+    }
+    foreach ($ivrs as $i) {
+        if ((int)($i['id'] ?? 0) === (int)$currentId) continue;
+        $num = trim((string)($i['ivr_number'] ?? ''));
+        $name = trim((string)($i['name'] ?? 'Sprachmenü'));
+        if ($num !== '') $items[] = ['value'=>'ivr|' . $num, 'label'=>$name . ' (IVR ' . $num . ')', 'short'=>$name, 'type'=>'ivr'];
+    }
+    if ($allowRepeat) $items[] = ['value'=>'repeat|', 'label'=>'Ansage wiederholen', 'short'=>'Wiederholen', 'type'=>'repeat'];
+    $items[] = ['value'=>'hangup|', 'label'=>'Auflegen', 'short'=>'Auflegen', 'type'=>'hangup'];
+    return $items;
+}
+
+function spbx_ivr_target_select_compact($name, $selectedValue, $items, $attrs = '')
+{
+    $html = '<select class="spbx-select" name="' . ih($name) . '" ' . $attrs . '>';
+    foreach ($items as $it) {
+        $html .= '<option value="' . ih($it['value']) . '" data-short="' . ih($it['short']) . '" data-type="' . ih($it['type']) . '"' . ((string)$selectedValue === (string)$it['value'] ? ' selected' : '') . '>' . ih($it['label']) . '</option>';
+    }
+    $html .= '</select>';
+    return $html;
+}
+
 $error = '';
 $message = '';
 $action = $_GET['action'] ?? '';
@@ -74,12 +134,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_action'] ?? '') === '
     $promptOptions = spbx_tts_post_options('prompt_tts_options');
     $timeoutSeconds = max(1, min(60, (int)ipost('timeout_seconds', '10')));
     $maxAttempts = max(1, min(9, (int)ipost('max_attempts', '3')));
-    $timeoutType = ipost('timeout_target_type', 'hangup');
-    $timeoutContext = ipost('timeout_target_context');
-    $timeoutExten = ipost('timeout_target_exten');
-    $invalidType = ipost('invalid_target_type', 'repeat');
-    $invalidContext = ipost('invalid_target_context');
-    $invalidExten = ipost('invalid_target_exten');
+    [$timeoutType, $timeoutContext, $timeoutExten] = spbx_ivr_parse_target_value(ipost('timeout_target', 'hangup|'));
+    [$invalidType, $invalidContext, $invalidExten] = spbx_ivr_parse_target_value(ipost('invalid_target', 'repeat|'));
     $active = isset($_POST['active']) ? 1 : 0;
 
     if (!preg_match('/^[0-9]{2,6}$/', $num)) $error = 'Bitte eine gültige IVR-Durchwahl eingeben.';
@@ -126,10 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['form_action'] ?? '') === '
         $pos = 0;
         foreach (spbx_ivr_digits() as $digit) {
             $safe = $digit === '*' ? 'star' : ($digit === '#' ? 'hash' : $digit);
-            $type = ipost('digit_' . $safe . '_type', 'none');
-            $context = ipost('digit_' . $safe . '_context');
-            $exten = ipost('digit_' . $safe . '_exten');
-            if (!isset(spbx_ivr_target_types()[$type])) $type = 'none';
+            [$type, $context, $exten] = spbx_ivr_parse_target_value(ipost('digit_' . $safe . '_target', 'none|'));
             $stmt = $db->prepare("INSERT INTO spbx_ivr_options (ivr_id, digit, target_type, target_context, target_exten, sort_order) VALUES (?,?,?,?,?,?)");
             $stmt->bind_param('issssi', $id, $digit, $type, $context, $exten, $pos);
             $stmt->execute();
@@ -188,6 +241,7 @@ $extensions = spbx_ivr_extensions_list();
 $queues = spbx_ivr_queues_list();
 $ringgroups = spbx_ivr_ringgroups_list();
 $otherIvrs = spbx_ivr_all(true);
+$targetItems = spbx_ivr_target_catalog($extensions, $queues, $ringgroups, $otherIvrs, (int)($edit['id'] ?? 0), true);
 ?>
 <!doctype html>
 <html lang="de">
@@ -197,13 +251,53 @@ $otherIvrs = spbx_ivr_all(true);
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 <link rel="stylesheet" href="../css/servuspbx.css">
 <style>
-.spbx-ivr-grid{display:grid;grid-template-columns:repeat(3,110px);gap:10px;align-items:stretch}.spbx-ivr-key{border:1px solid #d6e2f2;border-radius:14px;background:#fff;padding:10px}.spbx-ivr-key strong{display:block;font-size:22px;margin-bottom:6px}.spbx-ivr-key select,.spbx-ivr-key input{width:100%;margin-top:6px}.spbx-ann-widget{border:1px solid #d6e2f2;border-radius:14px;padding:14px;background:rgba(248,250,252,.7);margin-top:8px}.spbx-ann-title{font-weight:800;margin-bottom:10px}.spbx-ann-options-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}.spbx-ann-option{border:1px solid #d6e2f2;border-radius:12px;padding:10px;background:#fff}.spbx-ann-option-head{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:700}.spbx-ann-option input{width:100%}.spbx-ann-option small{display:block;color:#64748b;margin-top:4px}@media(max-width:900px){.spbx-ivr-grid{grid-template-columns:1fr}.spbx-ann-options-grid{grid-template-columns:1fr}}
+.spbx-ann-widget{border:1px solid #d6e2f2;border-radius:14px;padding:14px;background:rgba(248,250,252,.7);margin-top:8px}.spbx-ann-title{font-weight:800;margin-bottom:10px}.spbx-ann-options-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}.spbx-ann-option{border:1px solid #d6e2f2;border-radius:12px;padding:10px;background:#fff}.spbx-ann-option-head{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:700}.spbx-ann-option input{width:100%}.spbx-ann-option small{display:block;color:#64748b;margin-top:4px}
+.spbx-ivr-workspace{display:grid;grid-template-columns:minmax(280px,420px) minmax(280px,1fr);gap:18px;align-items:start}.spbx-ivr-phone{border:1px solid #d6e2f2;border-radius:18px;background:linear-gradient(180deg,#fff,#f8fafc);padding:18px}.spbx-ivr-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.spbx-ivr-padkey{border:1px solid #d6e2f2;border-radius:16px;background:#fff;min-height:86px;padding:10px;text-align:center;cursor:pointer;box-shadow:0 1px 2px rgba(15,23,42,.06);transition:.12s}.spbx-ivr-padkey:hover{transform:translateY(-1px);border-color:#94a3b8}.spbx-ivr-padkey.active{outline:3px solid rgba(37,99,235,.25);border-color:#2563eb}.spbx-ivr-digit{font-size:24px;font-weight:900;line-height:1}.spbx-ivr-label{font-size:12px;margin-top:8px;color:#475569;word-break:break-word;min-height:28px;display:flex;align-items:center;justify-content:center}.spbx-ivr-type-none{background:#fff}.spbx-ivr-type-extension{background:#ecfdf5}.spbx-ivr-type-queue{background:#eff6ff}.spbx-ivr-type-ringgroup{background:#fff7ed}.spbx-ivr-type-ivr{background:#f5f3ff}.spbx-ivr-type-repeat{background:#fefce8}.spbx-ivr-type-hangup{background:#fef2f2}.spbx-ivr-specials{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.spbx-ivr-special{border:1px solid #d6e2f2;border-radius:14px;background:#fff;padding:12px;cursor:pointer}.spbx-ivr-special.active{outline:3px solid rgba(37,99,235,.25);border-color:#2563eb}.spbx-ivr-editor{border:1px solid #d6e2f2;border-radius:18px;background:#fff;padding:18px;position:sticky;top:16px}.spbx-ivr-editor-title{font-size:20px;font-weight:900;margin-bottom:10px}.spbx-ivr-flow{border:1px solid #d6e2f2;border-radius:18px;background:#f8fafc;padding:14px;margin-top:18px}.spbx-flow-line{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px dashed #d6e2f2}.spbx-flow-line:last-child{border-bottom:0}.spbx-flow-badge{min-width:48px;font-weight:900;color:#0f172a}.spbx-flow-target{font-weight:700}.spbx-hidden{display:none!important}@media(max-width:980px){.spbx-ivr-workspace{grid-template-columns:1fr}.spbx-ivr-editor{position:static}.spbx-ann-options-grid{grid-template-columns:1fr}}
 </style>
 <script>
 function spbxAnnToggle(root){const sel=root.querySelector('.spbx-ann-type');if(!sel)return;const t=sel.value;root.querySelectorAll('.spbx-ann-panel-tts').forEach(e=>e.style.display=(t==='tts'?'':'none'));root.querySelectorAll('.spbx-ann-panel-mp3').forEach(e=>e.style.display=(t==='mp3'?'':'none'));}
 function spbxAnnRangeUpdate(inp){const out=document.querySelector('[data-ann-out="'+inp.name+'"]');if(out){let suffix=inp.name.includes('sentence_silence')?' s':(inp.name.includes('volume_db')?' dB':'');out.textContent=inp.value+suffix;}}
 function spbxAnnInit(){document.querySelectorAll('.spbx-ann-widget').forEach(function(root){spbxAnnToggle(root);const sel=root.querySelector('.spbx-ann-type');if(sel)sel.addEventListener('change',function(){spbxAnnToggle(root);});});document.querySelectorAll('.spbx-ann-option input[type=range]').forEach(function(inp){inp.addEventListener('input',function(){spbxAnnRangeUpdate(inp);});spbxAnnRangeUpdate(inp);});document.querySelectorAll('.spbx-ann-reset-defaults').forEach(function(btn){btn.addEventListener('click',function(){const root=btn.closest('.spbx-ann-widget')||document;const voice=root.querySelector('[name="'+btn.dataset.voiceName+'"]');if(voice&&btn.dataset.defaultVoice)voice.value=btn.dataset.defaultVoice;const map={length_scale:'lengthScale',noise_scale:'noiseScale',noise_w:'noiseW',sentence_silence:'sentenceSilence',volume_db:'volumeDb'};Object.keys(map).forEach(function(k){const name=btn.dataset.prefix+'_'+k;const inp=root.querySelector('[name="'+name+'"]');const val=btn.dataset[map[k]];if(inp&&val!==undefined){inp.value=val;spbxAnnRangeUpdate(inp);}});const note=root.querySelector('.spbx-ann-reset-note');if(note)note.textContent='Standardwerte wurden wiederhergestellt. Bitte speichern, damit die MP3 aktualisiert wird.';});});}
 document.addEventListener('DOMContentLoaded',spbxAnnInit);
+
+const spbxIvrTargets = window.spbxIvrTargets || {};
+function spbxIvrTargetMeta(value){return spbxIvrTargets[value] || {short:'+', type:'none', label:'Nicht belegt'};}
+function spbxIvrShort(value){const m=spbxIvrTargetMeta(value);return m.short || '+';}
+function spbxIvrType(value){const m=spbxIvrTargetMeta(value);return m.type || 'none';}
+function spbxIvrSetActive(key){
+  document.querySelectorAll('[data-ivr-key]').forEach(e=>e.classList.remove('active'));
+  const btn=document.querySelector('[data-ivr-key="'+key+'"]'); if(btn)btn.classList.add('active');
+  const title=document.getElementById('spbxIvrEditorTitle'); if(title)title.textContent=(key==='timeout'?'Timeout':(key==='invalid'?'Ungültige Eingabe':'Taste '+key));
+  const select=document.getElementById('spbxIvrEditorSelect');
+  const hidden=document.querySelector('[data-ivr-hidden="'+key+'"]');
+  if(select&&hidden) select.value=hidden.value || 'none|';
+}
+function spbxIvrRefresh(){
+  document.querySelectorAll('[data-ivr-key]').forEach(function(btn){
+    const key=btn.dataset.ivrKey; const hidden=document.querySelector('[data-ivr-hidden="'+key+'"]'); const value=hidden?hidden.value:'none|';
+    btn.className=btn.className.replace(/spbx-ivr-type-\S+/g,'').trim();
+    btn.classList.add('spbx-ivr-type-'+spbxIvrType(value));
+    const lab=btn.querySelector('.spbx-ivr-label'); if(lab) lab.textContent=spbxIvrShort(value);
+    btn.title=spbxIvrTargetMeta(value).label || '';
+  });
+  const flow=document.getElementById('spbxIvrFlowLines'); if(flow){
+    let html=''; document.querySelectorAll('[data-ivr-flow-key]').forEach(function(h){
+      const v=h.value || 'none|'; if(spbxIvrType(v)==='none') return;
+      const key=h.dataset.ivrFlowKey; const label=(key==='timeout'?'Timeout':(key==='invalid'?'Ungültig':'Taste '+key));
+      html += '<div class="spbx-flow-line"><div class="spbx-flow-badge">'+label+'</div><div>→</div><div class="spbx-flow-target">'+spbxIvrShort(v)+'</div></div>';
+    });
+    flow.innerHTML = html || '<div class="spbx-card-muted">Noch keine Ziele belegt.</div>';
+  }
+}
+function spbxIvrInit(){
+  document.querySelectorAll('[data-ivr-key]').forEach(btn=>btn.addEventListener('click',()=>spbxIvrSetActive(btn.dataset.ivrKey)));
+  const select=document.getElementById('spbxIvrEditorSelect');
+  if(select){select.addEventListener('change',function(){const active=document.querySelector('[data-ivr-key].active'); if(!active)return; const hidden=document.querySelector('[data-ivr-hidden="'+active.dataset.ivrKey+'"]'); if(hidden){hidden.value=select.value; spbxIvrRefresh();}});}
+  const remove=document.getElementById('spbxIvrRemoveTarget');
+  if(remove){remove.addEventListener('click',function(e){e.preventDefault(); if(select){select.value='none|'; select.dispatchEvent(new Event('change'));}});}
+  spbxIvrRefresh(); spbxIvrSetActive('1');
+}
+document.addEventListener('DOMContentLoaded',spbxIvrInit);
 </script>
 </head>
 <body>
@@ -249,36 +343,62 @@ echo spbx_tts_render_announcement_widget([
 ?>
 
 <hr><h3>Tastenbelegung</h3>
-<div class="spbx-ivr-grid">
-<?php foreach (spbx_ivr_digits() as $digit): $safe = $digit === '*' ? 'star' : ($digit === '#' ? 'hash' : $digit); $opt = $edit['options'][$digit] ?? ['target_type'=>'none','target_context'=>'','target_exten'=>'']; ?>
-<div class="spbx-ivr-key">
-<strong><?php echo ih($digit); ?></strong>
-<label>Zieltyp</label>
-<?php echo spbx_ivr_target_select('digit_' . $safe . '_type', $opt['target_type'] ?? 'none', true); ?>
-<label>Context</label><input class="spbx-input" name="digit_<?php echo ih($safe); ?>_context" value="<?php echo ih($opt['target_context'] ?? ''); ?>" placeholder="optional">
-<label>Ziel</label><input class="spbx-input" name="digit_<?php echo ih($safe); ?>_exten" value="<?php echo ih($opt['target_exten'] ?? ''); ?>" list="spbx_ivr_targets" placeholder="Nebenstelle / Queue / IVR">
-</div>
-<?php endforeach; ?>
-</div>
-<datalist id="spbx_ivr_targets">
-<?php foreach ($extensions as $e): ?><option value="<?php echo ih($e['extension']); ?>"><?php echo ih($e['extension'] . ' - ' . $e['display_name']); ?></option><?php endforeach; ?>
-<?php foreach ($queues as $q): ?><option value="<?php echo ih($q['queue_number']); ?>"><?php echo ih($q['queue_number'] . ' - Queue ' . $q['queue_name']); ?></option><?php endforeach; ?>
-<?php foreach ($ringgroups as $g): ?><option value="<?php echo ih($g['group_number']); ?>"><?php echo ih($g['group_number'] . ' - Rufgruppe ' . $g['name']); ?></option><?php endforeach; ?>
-<?php foreach ($otherIvrs as $i): if ((int)$i['id'] === (int)$edit['id']) continue; ?><option value="<?php echo ih($i['ivr_number']); ?>"><?php echo ih($i['ivr_number'] . ' - IVR ' . $i['name']); ?></option><?php endforeach; ?>
-</datalist>
+<p class="spbx-card-muted">Klicken Sie auf eine Taste, um das Ziel festzulegen.</p>
+<script>
+window.spbxIvrTargets = <?php
+$jsTargets = [];
+foreach ($targetItems as $it) $jsTargets[$it['value']] = ['short'=>$it['short'], 'type'=>$it['type'], 'label'=>$it['label']];
+echo json_encode($jsTargets, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+?>;
+</script>
+<div class="spbx-ivr-workspace">
+  <div>
+    <div class="spbx-ivr-phone">
+      <div class="spbx-ivr-keypad">
+      <?php foreach (['1','2','3','4','5','6','7','8','9','*','0','#'] as $digit):
+          $safe = $digit === '*' ? 'star' : ($digit === '#' ? 'hash' : $digit);
+          $opt = $edit['options'][$digit] ?? ['target_type'=>'none','target_exten'=>''];
+          $value = spbx_ivr_target_value($opt['target_type'] ?? 'none', $opt['target_exten'] ?? '');
+      ?>
+        <button type="button" class="spbx-ivr-padkey" data-ivr-key="<?php echo ih($digit); ?>">
+          <div class="spbx-ivr-digit"><?php echo ih($digit); ?></div>
+          <div class="spbx-ivr-label">+</div>
+        </button>
+        <input type="hidden" data-ivr-hidden="<?php echo ih($digit); ?>" data-ivr-flow-key="<?php echo ih($digit); ?>" name="digit_<?php echo ih($safe); ?>_target" value="<?php echo ih($value); ?>">
+      <?php endforeach; ?>
+      </div>
+      <div class="spbx-ivr-specials">
+        <?php $timeoutValue = spbx_ivr_target_value($edit['timeout_target_type'] ?? 'hangup', $edit['timeout_target_exten'] ?? ''); ?>
+        <?php $invalidValue = spbx_ivr_target_value($edit['invalid_target_type'] ?? 'repeat', $edit['invalid_target_exten'] ?? ''); ?>
+        <button type="button" class="spbx-ivr-special" data-ivr-key="timeout"><strong>⏱ Timeout</strong><br><span class="spbx-ivr-label">+</span></button>
+        <input type="hidden" data-ivr-hidden="timeout" data-ivr-flow-key="timeout" name="timeout_target" value="<?php echo ih($timeoutValue); ?>">
+        <button type="button" class="spbx-ivr-special" data-ivr-key="invalid"><strong>⚠ Ungültig</strong><br><span class="spbx-ivr-label">+</span></button>
+        <input type="hidden" data-ivr-hidden="invalid" data-ivr-flow-key="invalid" name="invalid_target" value="<?php echo ih($invalidValue); ?>">
+      </div>
+    </div>
 
-<hr><h3>Timeout und ungültige Eingabe</h3>
+    <div class="spbx-ivr-flow">
+      <strong>Callflow-Vorschau</strong>
+      <div class="spbx-card-muted" style="margin:4px 0 8px;">Anruf → <?php echo ih($edit['name'] ?: 'Sprachmenü'); ?></div>
+      <div id="spbxIvrFlowLines"></div>
+    </div>
+  </div>
+
+  <div class="spbx-ivr-editor">
+    <div class="spbx-ivr-editor-title" id="spbxIvrEditorTitle">Taste 1</div>
+    <div class="spbx-field">
+      <label>Ziel</label>
+      <?php echo spbx_ivr_target_select_compact('ivr_editor_target', 'none|', $targetItems, 'id="spbxIvrEditorSelect"'); ?>
+    </div>
+    <button class="spbx-button secondary" id="spbxIvrRemoveTarget">Ziel entfernen</button>
+  </div>
+</div>
+
+<hr><h3>Timeout</h3>
 <div class="spbx-form-grid">
 <div class="spbx-field"><label>Timeout Sekunden</label><input class="spbx-input" type="number" min="1" max="60" name="timeout_seconds" value="<?php echo (int)$edit['timeout_seconds']; ?>"></div>
 <div class="spbx-field"><label>Maximale Versuche</label><input class="spbx-input" type="number" min="1" max="9" name="max_attempts" value="<?php echo (int)$edit['max_attempts']; ?>"><div class="spbx-card-muted">für spätere Komfortlogik vorbereitet</div></div>
-<div class="spbx-field"><label>Timeout Zieltyp</label><?php echo spbx_ivr_target_select('timeout_target_type', $edit['timeout_target_type'] ?? 'hangup', true); ?></div>
-<div class="spbx-field"><label>Timeout Context</label><input class="spbx-input" name="timeout_target_context" value="<?php echo ih($edit['timeout_target_context']); ?>"></div>
-<div class="spbx-field"><label>Timeout Ziel</label><input class="spbx-input" name="timeout_target_exten" value="<?php echo ih($edit['timeout_target_exten']); ?>" list="spbx_ivr_targets"></div>
-<div class="spbx-field"><label>Ungültige Eingabe Zieltyp</label><?php echo spbx_ivr_target_select('invalid_target_type', $edit['invalid_target_type'] ?? 'repeat', true); ?></div>
-<div class="spbx-field"><label>Ungültig Context</label><input class="spbx-input" name="invalid_target_context" value="<?php echo ih($edit['invalid_target_context']); ?>"></div>
-<div class="spbx-field"><label>Ungültig Ziel</label><input class="spbx-input" name="invalid_target_exten" value="<?php echo ih($edit['invalid_target_exten']); ?>" list="spbx_ivr_targets"></div>
 </div>
-
 <div style="margin-top:18px;display:flex;gap:10px;">
 <button class="spbx-button primary" type="submit">Speichern &amp; MP3 erzeugen</button>
 <a class="spbx-button secondary" href="ivr.php">Abbrechen</a>
